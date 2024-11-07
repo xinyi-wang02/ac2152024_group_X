@@ -9,7 +9,7 @@ import numpy as np
 
 def download_data(source_bucket_name, csv_blob_name, local_image_dir, local_csv_path):
     # Initialize GCS client
-    client = storage.Client.from_service_account_json('/no_ship/data-service-account.json')
+    client = storage.Client()
     bucket = client.bucket(source_bucket_name)
     
     # Download CSV file
@@ -81,7 +81,7 @@ def process_and_save_tfrecord(df, local_image_dir, tfrecord_path):
     print(f"Saved TFRecord file to {tfrecord_path}")
 
 def upload_to_bucket(dest_bucket_name, local_file_path):
-    client = storage.Client.from_service_account_json('no_ship/data-service-account.json')
+    client = storage.Client()
     bucket = client.bucket(dest_bucket_name)
     blob_name = os.path.basename(local_file_path)
     blob = bucket.blob(blob_name)
