@@ -14,13 +14,19 @@ RUN set -ex; \
     pip install pipenv
 
 
+WORKDIR /app
+
 # Add Pipfile, Pipfile.lock + python code
-ADD . /
+ADD . /app
 
 RUN mkdir -p no_ship
+
+RUN mkdir -p secrets
 
 RUN pipenv sync
 RUN chmod +x entrypoint.sh
 # Entry point
 ENTRYPOINT ["/bin/bash","./entrypoint.sh"]
+# ENTRYPOINT ["/bin/bash"]
 # Get into the pipenv shell
+# CMD ["-c", "pipenv shell"]
