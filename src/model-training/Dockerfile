@@ -24,7 +24,7 @@ RUN mkdir -p dev
 RUN pipenv sync
 RUN chmod +x entrypoint.sh
 # Entry point
-# ENTRYPOINT ["/bin/bash","./entrypoint.sh"]
-ENTRYPOINT ["/bin/bash"]
+ENTRYPOINT ["/bin/bash","./entrypoint.sh"]
+# ENTRYPOINT ["/bin/bash"]
 # Get into the pipenv shell
-CMD ["-c", "pipenv shell"]
+# CMD ["-c", "pipenv shell"]
