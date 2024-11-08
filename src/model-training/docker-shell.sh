@@ -9,7 +9,7 @@ export BASE_DIR=$(pwd)
 export LOCAL_MOUNT_DIR="./no_ship"
 
 # Build the image based on the Dockerfile
-docker build --no-cache -t $IMAGE_NAME -f Dockerfile .
+docker build --no-cache -t $IMAGE_NAME --platform=linux/x86_64 -f Dockerfile .
 #docker build -t $IMAGE_NAME --platform=linux/amd64 -f Dockerfile .
 
 # Run the container

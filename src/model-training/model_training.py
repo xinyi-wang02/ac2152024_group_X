@@ -106,7 +106,7 @@ model.compile(
 # Set up callbacks
 callbacks = [
     EarlyStopping(monitor='val_loss', patience=5, verbose=1, restore_best_weights=True),
-    ModelCheckpoint(filepath='best_model.keras', monitor='val_loss', save_best_only=True, verbose=1),
+    ModelCheckpoint(filepath='best_model.h5', monitor='val_loss', save_best_only=True, verbose=1),
 ]
 
 # Train the model

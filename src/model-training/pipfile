@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 numpy = "*"
-tensorflow = "*"
+tensorflow = "2.13"
 pandas = "*"
 seaborn = "*"
 matplotlib = "*"
