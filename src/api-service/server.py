@@ -5,6 +5,12 @@ from google.cloud import aiplatform
 from google.protobuf import json_format
 from google.protobuf.struct_pb2 import Value
 import base64
+import json
+
+with open('label_dictionary.json') as json_file:
+    label_data = json.load(json_file)
+
+labels_dict = label_data["label"]
 
 def predict_custom_trained_model_sample(
     project: str,
@@ -60,6 +66,6 @@ async def predict(image: bytes = File(...)):
     result = []
 
     for prediction in predictions:
-        result.append(prediction.index(max(prediction)))
-    return {"result": result}
+        result.append(labels_dict[str(prediction.index(max(prediction)))])
+    return {"predicted_car_types": result}
 
