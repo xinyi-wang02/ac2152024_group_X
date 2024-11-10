@@ -4,18 +4,17 @@
 set -e
 
 # Define some environment variables
-export IMAGE_NAME="215_data_pipeline_tensor"
-export BASE_DIR=$(pwd)
-export LOCAL_MOUNT_DIR="./no_ship"
+export IMAGE_NAME="215_pytest"
+export LOCAL_MOUNT_DIR="./tests/no_ship"
 
 # Build the image based on the Dockerfile
-docker build --no-cache -t $IMAGE_NAME -f Dockerfile .
-#docker build -t $IMAGE_NAME --platform=linux/amd64 -f Dockerfile .
+#docker build -t $IMAGE_NAME -f Dockerfile .
+#docker build --no-cache -t $IMAGE_NAME -f Dockerfile .
 
 # Run the container
 docker run --rm \
 --name $IMAGE_NAME \
 -e GOOGLE_APPLICATION_CREDENTIALS='/no_ship/data-service-account.json' \
 -v $LOCAL_MOUNT_DIR:/no_ship \
--v "./":/app \
+-v ./:/app/dev \
 -ti $IMAGE_NAME
