@@ -8,7 +8,7 @@ export IMAGE_NAME="215_pytest"
 export LOCAL_MOUNT_DIR="./tests/no_ship"
 
 # Build the image based on the Dockerfile
-#docker build -t $IMAGE_NAME -f Dockerfile .
+docker build -t $IMAGE_NAME -f Dockerfile .
 #docker build --no-cache -t $IMAGE_NAME -f Dockerfile .
 
 # Run the container

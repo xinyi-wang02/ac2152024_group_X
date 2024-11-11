@@ -23,7 +23,7 @@ RUN mkdir -p no_ship
 RUN pipenv sync
 RUN chmod +x entrypoint.sh
 # Entry point
-# ENTRYPOINT ["/bin/bash","./entrypoint.sh"]
+ENTRYPOINT ["/bin/bash","./entrypoint.sh"]
 # Get into the pipenv shell
-ENTRYPOINT ["/bin/bash"]
-CMD ["-c", "pipenv shell"]
+# ENTRYPOINT ["/bin/bash"]
+# CMD ["-c", "pipenv shell"]
