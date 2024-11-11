@@ -24,4 +24,8 @@ jobs:
       run: docker build -t dev_test_image -f Dockerfile .
     - name: Run Unit Tests
       working-directory: ./src
-      run: docker run --name dev_test_image dev_test_image
+      run: |- 
+        docker run --name dev_test_image \
+        --mount type=bind,source=$GOOGLE_APPLICATION_CREDENTIALS,target=/secrets/ai-service-account.json \
+        -e GOOGLE_APPLICATION_CREDENTIALS=/secrets/ai-service-account.json \
+        dev_test_image
