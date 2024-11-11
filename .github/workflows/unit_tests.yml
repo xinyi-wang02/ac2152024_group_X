@@ -1,0 +1,26 @@
+name: "Pipeline Unit Tests"
+
+on:
+  push:
+    branches:
+    - 'main'
+  pull_request:
+
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v4
+    - id: 'auth'
+      name: Auth to Google Cloud Platform
+      uses: google-github-actions/auth@v2
+      with:
+          credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+    - name: Build Test Docker
+      working-directory: ./src
+      run: docker build -t dev_test_image -f Dockerfile .
+    - name: Run Unit Tests
+      working-directory: ./src
+      run: docker run --name dev_test_image -ti dev_test_image
