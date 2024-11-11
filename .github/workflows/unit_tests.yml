@@ -4,6 +4,7 @@ on:
   push:
     branches:
     - 'main'
+    - 'milestone4'
   pull_request:
 
 
@@ -23,4 +24,4 @@ jobs:
       run: docker build -t dev_test_image -f Dockerfile .
     - name: Run Unit Tests
       working-directory: ./src
-      run: docker run --name dev_test_image -ti dev_test_image
+      run: docker run --name dev_test_image dev_test_image
