@@ -1,4 +1,5 @@
 from fastapi import FastAPI, File, UploadFile
+from starlette.middleware.cors import CORSMiddleware
 from typing import Dict, List, Union
 
 from google.cloud import aiplatform
@@ -51,6 +52,15 @@ def predict_custom_trained_model_sample(
 
 
 app = FastAPI()
+
+# Enable CORSMiddleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_credentials=False,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/predict")
 async def predict(image: bytes = File(...)):
