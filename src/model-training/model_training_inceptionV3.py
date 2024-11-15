@@ -7,23 +7,23 @@ from tensorflow.keras.layers import Dense, GlobalAvgPool2D
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
 from tensorflow.keras.applications import InceptionV3
 from google.cloud import storage
-from google.colab import drive
 import wandb
 from wandb.integration.keras import WandbMetricsLogger, WandbModelCheckpoint
 
 wandb.login()
 
 ### SETTING CONSTANT VARIABLES
-SECRETS_PATH = '/content/data-service-account-model.json'
-BUCKET_NAME = 'tensor-bucket-20k'
-LOCAL_PATH = '/content/tensor'
-LOCAL_TFRECORD_PATH = '/content/tensor/data.tfrecord'
+SECRETS_PATH = "/content/data-service-account-model.json"
+BUCKET_NAME = "tensor-bucket-20k"
+LOCAL_PATH = "/content/tensor"
+LOCAL_TFRECORD_PATH = "/content/tensor/data.tfrecord"
 IMAGE_HEIGHT = 224
 IMAGE_WIDTH = 224
 NUM_CHANNELS = 3
 BATCH_SIZE = 32
 EPOCHS = 50
-WNB_PROJECT_NAME = 'model_train_inception_215_group'
+WNB_PROJECT_NAME = "model_train_inception_215_group"
+
 
 ### DEFINING FUNCTIONS FOR MODEL TRAIN
 def download_tensorized_data_from_bucket(secrets_path, bucket_name, local_dir):
@@ -41,28 +41,34 @@ def download_tensorized_data_from_bucket(secrets_path, bucket_name, local_dir):
         blob.download_to_filename(local_path)
         print(f"Downloaded {blob.name} to {local_path}")
 
+
 feature_description = {
-    'image_raw': tf.io.FixedLenFeature([], tf.string),
-    'label': tf.io.FixedLenFeature([], tf.int64),
+    "image_raw": tf.io.FixedLenFeature([], tf.string),
+    "label": tf.io.FixedLenFeature([], tf.int64),
 }
+
 
 def parse_tfrecord(LOCAL_TFRECORD_PATH):
     # Parse the tensorized data using the feature description
-    parsed_example = tf.io.parse_single_example(LOCAL_TFRECORD_PATH, feature_description)
+    parsed_example = tf.io.parse_single_example(
+        LOCAL_TFRECORD_PATH, feature_description
+    )
 
     # Decode the raw bytes to get the image
-    image = tf.io.decode_raw(parsed_example['image_raw'], tf.uint8)
+    image = tf.io.decode_raw(parsed_example["image_raw"], tf.uint8)
     image = tf.reshape(image, [IMAGE_HEIGHT, IMAGE_WIDTH, NUM_CHANNELS])
     image = tf.cast(image, tf.float32) / 255.0  # Normalize to [0, 1]
 
     # Get the label
-    label = parsed_example['label']
+    label = parsed_example["label"]
     return image, label
+
 
 # One-hot encode labels if using categorical crossentropy
 def one_hot_encode(image, label):
     label = tf.one_hot(label, NUM_CLASSES)
     return image, label
+
 
 ### PREPARATION FOR MODEL TRAINING
 # download tensorized data from bucket and read in as dataset
@@ -99,32 +105,45 @@ val_dataset = val_dataset.batch(BATCH_SIZE).prefetch(buffer_size=tf.data.AUTOTUN
 
 ### START MODEL TRAINING
 # Initialize WandB project
-wandb.init(project=WNB_PROJECT_NAME,
-           config={"epochs": EPOCHS, "batch_size": BATCH_SIZE, "architecture": "InceptionV3"})
+wandb.init(
+    project=WNB_PROJECT_NAME,
+    config={"epochs": EPOCHS, "batch_size": BATCH_SIZE, "architecture": "InceptionV3"},
+)
 
 # Model Name
 name3 = "CarNetV3"
 
 # Pretrained Model
-base_model = InceptionV3(include_top=False, input_shape=(IMAGE_HEIGHT, IMAGE_WIDTH, NUM_CHANNELS), weights='imagenet')
-base_model.trainable = False # Freeze the Weights
+base_model = InceptionV3(
+    include_top=False,
+    input_shape=(IMAGE_HEIGHT, IMAGE_WIDTH, NUM_CHANNELS),
+    weights="imagenet",
+)
+base_model.trainable = False  # Freeze the Weights
 
 # Model
-CarNetV3 = Sequential([
-    base_model,
-    GlobalAvgPool2D(),
-    Dense(224, activation='leaky_relu'),
-    Dense(NUM_CLASSES, activation='softmax')
-], name=name3)
+CarNetV3 = Sequential(
+    [
+        base_model,
+        GlobalAvgPool2D(),
+        Dense(224, activation="leaky_relu"),
+        Dense(NUM_CLASSES, activation="softmax"),
+    ],
+    name=name3,
+)
 
-CarNetV3.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+CarNetV3.compile(
+    optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"]
+)
 
 # Callbacks
 callbacks = [
-    EarlyStopping(monitor='val_loss', patience=5, verbose=1, restore_best_weights=True),
-    ModelCheckpoint(filepath='best_model.keras', monitor='val_loss', save_best_only=True, verbose=1),
+    EarlyStopping(monitor="val_loss", patience=5, verbose=1, restore_best_weights=True),
+    ModelCheckpoint(
+        filepath="best_model.keras", monitor="val_loss", save_best_only=True, verbose=1
+    ),
     WandbMetricsLogger(),
-    WandbModelCheckpoint('inception_models_215.keras')
+    WandbModelCheckpoint("inception_models_215.keras"),
 ]
 
 # Train
@@ -135,7 +154,7 @@ history = CarNetV3.fit(
     validation_data=val_dataset,
     epochs=EPOCHS,
     callbacks=callbacks,
-    verbose=1
+    verbose=1,
 )
 execution_time = (time.time() - start_time) / 60.0
 print(f"Training completed in {execution_time:.2f} minutes")

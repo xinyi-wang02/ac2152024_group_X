@@ -1,4 +1,5 @@
-import sys, os
+import sys
+import os
 
 # Make sure that the application source directory (this directory's parent) is
 # on sys.path.
@@ -13,10 +14,11 @@ MINI_BUCKET_NAME = "mini-215-multiclass-car-bucket"
 def delete_ds_store_files(folder_path):
     for root, _, files in os.walk(folder_path):
         for file in files:
-            if file == '.DS_Store':
+            if file == ".DS_Store":
                 file_path = os.path.join(root, file)
                 os.remove(file_path)
                 print(f"Deleted: {file_path}")
+
 
 def count_files(folder, file_type):
     file_count = 0

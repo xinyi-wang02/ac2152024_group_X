@@ -1,9 +1,9 @@
 import os
-import shutil
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 import argparse
 from PIL import Image, ImageOps, ImageEnhance
+
 
 # TODO: function for image resizing and augmentation
 def preprocess_image(image):
@@ -25,12 +25,13 @@ def preprocess_image(image):
 
     # Adjust brightness
     enhancer = ImageEnhance.Brightness(image_resized)
-    image_bright = enhancer.enhance(1.5) 
-    image_dark = enhancer.enhance(0.5) 
+    image_bright = enhancer.enhance(1.5)
+    image_dark = enhancer.enhance(0.5)
     processed_images.append((image_bright, "_bright"))
     processed_images.append((image_dark, "_dark"))
 
     return processed_images
+
 
 # Function to copy images and record labels
 def process_images(data_dir, image_output_dir, output_prefix, image_names):
@@ -53,11 +54,15 @@ def process_images(data_dir, image_output_dir, output_prefix, image_names):
                                     output_image_name = f"{name}{suffix}{ext}"
 
                                 while output_image_name in image_names:
-                                    output_image_name = output_prefix + output_image_name
+                                    output_image_name = (
+                                        output_prefix + output_image_name
+                                    )
                                 image_names.add(output_image_name)
                                 if len(image_names) % 1000 == 0:
                                     print(f"Processed {len(image_names)} files")
-                                new_img_path = os.path.join(image_output_dir, output_image_name)
+                                new_img_path = os.path.join(
+                                    image_output_dir, output_image_name
+                                )
                                 # Save the processed image
                                 processed_img.save(new_img_path)
                                 # Add the image name and label to the list
@@ -67,8 +72,7 @@ def process_images(data_dir, image_output_dir, output_prefix, image_names):
 
 
 if __name__ == "__main__":
-
-    parser = argparse.ArgumentParser(description='Preprocess Data to GCP')
+    parser = argparse.ArgumentParser(description="Preprocess Data to GCP")
 
     parser.add_argument("-t", "--train")
     parser.add_argument("-e", "--test")
@@ -91,16 +95,16 @@ if __name__ == "__main__":
     print(f"Processed {len(image_names)} files")
 
     # Create a DataFrame from the collected data
-    df = pd.DataFrame(image_data, columns=['image_name', 'label'])
+    df = pd.DataFrame(image_data, columns=["image_name", "label"])
     label_encoder = LabelEncoder()
-    df['label_encoded'] = label_encoder.fit_transform(df['label'])
+    df["label_encoded"] = label_encoder.fit_transform(df["label"])
     # Save the DataFrame to a CSV file
     label_path = os.path.join(output_dir, "class_label.csv")
     df.to_csv(label_path, index=False)
 
     label_mapping_df = pd.DataFrame({
-        'label': label_encoder.classes_,
-        'label_encoded': label_encoder.transform(label_encoder.classes_)
+        "label": label_encoder.classes_,
+        "label_encoded": label_encoder.transform(label_encoder.classes_),
     })
     map_path = os.path.join(output_dir, "class_label_dictionary.csv")
     label_mapping_df.to_csv(map_path, index=False)

@@ -10,8 +10,8 @@ Project Organization
 │   ├── eda_notebook.ipynb
 │   └── model_testing.ipynb
 ├── images
-│   ├── 
-│   └── 
+│   ├──
+│   └──
 ├── reports
 │   └── AC215_project_proposal_group16_updated.pdf
 ├── README.md
@@ -90,14 +90,14 @@ Project Organization
     │   │   │   │   ├── Acura RL Sedan 2012
     │   │   │   │   │   └── 00183.jpg
     │   │   │   │   │   └── 00249.jpg
-    │   │   │   ├── train    
+    │   │   │   ├── train
     │   │   │   │   └── Acura Integra Type R 2001
     │   │   │   │   │   └── 00198.jpg
     │   │   │   │   │   └── 00255.jpg
     │   │   │   │   ├── Acura RL Sedan 2012
     │   │   │   │   │   └── 00670.jpg
     │   │   │   │   │   └── 00691.jpg
-    │   │   ├── upload_test_images   
+    │   │   ├── upload_test_images
     │   │   │   └── test_images
     │   │   │   │   └── 00128.jpg
     │   ├── conftest.py
@@ -130,30 +130,30 @@ Nuoya Jiang, Harper Wang
 Group 16
 
 **Project**
-In this project, we aim to develop an application that can accurately identify the car model, make, and year from user-uploaded photos. 
+In this project, we aim to develop an application that can accurately identify the car model, make, and year from user-uploaded photos.
 
 ### Milestone 4 ###
 
 In this milestone we re-constructed most parts of the project in a new repository:
 
       (1) Preprocess container [/src/data-preprocess/](src/data-preprocess/)
-      
+
       (2) Tensorizing container [/src/image_train_preparation/](src/image_train_preparation/)
-      
+
       (3) Model training container [/src/model-training/](src/model-training/)
-    
+
       (4) Model deployment on VertexAI container [/src/model-deployment/](src/model-deployment/)
 
       (5) API service [/src/api-service/](src/api-service/)
-      
+
       (6) Frontend Simple container [/src/frontend/](src/frontend/)
-       
+
       (7)
-      
+
       (8)
-      
+
       (9)
-       
+
       (10)
 
 #### Application Design ####
@@ -197,7 +197,7 @@ To run Dockerfile - enter the below commands in your local terminal:
 
 #### Tensorizing container (image_train_preparation) ####
 
-* This container downloads preprocessed images and their labels from the GCP Bucket and convert the images to tensors and save them as `.tfrecord` in another GCS Bucket. 
+* This container downloads preprocessed images and their labels from the GCP Bucket and convert the images to tensors and save them as `.tfrecord` in another GCS Bucket.
 * Input to this container is the GCP file location of the preprocessed image folder and the destination GCS Bucket that saves the tensorized data, secrets needed - via docker
 * Output from this container stored at GCS Bucket
 
@@ -223,14 +223,14 @@ To run Dockerfile - enter the below commands in your local terminal:
 
 #### Model training container (model-training) ####
 
-* This container is a proof of principal that uses a mini batch of the original data to perform transfer learning using the baseline model (ResNet50). Due to time limitation, we will use Google Colab with GPU resources to train the actual model that we deploy for our application. 
+* This container is a proof of principal that uses a mini batch of the original data to perform transfer learning using the baseline model (ResNet50). Due to time limitation, we will use Google Colab with GPU resources to train the actual model that we deploy for our application.
 * This container includes a script for performing transfer learning on an InceptionV3-based model using a randomly sampled set of 20,000 images from the augmented pool of approximately 90,000 images. As advised by our teaching fellow, Javier, the complete random sampling method poses a high risk of class imbalance in the dataset used for model training, which needs to be addressed through stratified sampling or downsampling in future training iterations.
 * Input to this container is the GCS file location of the tensorized record, the hyperparameters required for model training (e.g. batch size, epoch number, image height, image width, etc.) and the destination GCS Bucket that saves the trained model, secrets needed - via docker
 * Output from this container stored at GCS Bucket
 
 (1)`src/model-training/model_training.py` - This script downloads a TFRecord dataset from the GCS Bucket with tensorized TFRecord, preprocesses the data, and trains a deep learning model using transfer learning with ResNet50. After training, it evaluates the model and saves it to GCS with an appropriate serving function for API deployment.
 
-(2)`src/model-training/model_training_inceptionV3.py` - This script downloads a TFRecord dataset from the GCS Bucket with tensorized TFRecord, preprocesses the data, and trains a deep learning model using transfer learning with InceptionV3. 
+(2)`src/model-training/model_training_inceptionV3.py` - This script downloads a TFRecord dataset from the GCS Bucket with tensorized TFRecord, preprocesses the data, and trains a deep learning model using transfer learning with InceptionV3.
 
 (3)`src/model-training/pipfile` and `src/image_train_preparation/Pipfile.lock` - These files specify the required packages for building the container.
 
@@ -249,13 +249,13 @@ To run Dockerfile - enter the below commands in your local terminal:
 
 #### Model deployment container (model-deployment) ####
 
-* This container is a proof of principal that uses a mini batch of the original data to perform transfer learning using the baseline model (ResNet50). Due to time limitation, we will use Google Colab with GPU resources to train the actual model that we deploy for our application. 
+* This container is a proof of principal that uses a mini batch of the original data to perform transfer learning using the baseline model (ResNet50). Due to time limitation, we will use Google Colab with GPU resources to train the actual model that we deploy for our application.
 * Input to this container is the GCS file location of the tensorized record, the hyperparameters required for model training (e.g. batch size, epoch number, image height, image width, etc.) and the destination GCS Bucket that saves the trained model, secrets needed - via docker
 * Output from this container stored at GCS Bucket
 
 (1)`src/model-training/model_training.py` - This script downloads a TFRecord dataset from the GCS Bucket with tensorized TFRecord, preprocesses the data, and trains a deep learning model using transfer learning with ResNet50. After training, it evaluates the model and saves it to GCS with an appropriate serving function for API deployment.
 
-(2)`src/model-training/model_training_inceptionV3.py` - This script downloads a TFRecord dataset from the GCS Bucket with tensorized TFRecord, preprocesses the data, and trains a deep learning model using transfer learning with InceptionV3. 
+(2)`src/model-training/model_training_inceptionV3.py` - This script downloads a TFRecord dataset from the GCS Bucket with tensorized TFRecord, preprocesses the data, and trains a deep learning model using transfer learning with InceptionV3.
 
 (3)`src/model-training/pipfile` and `src/image_train_preparation/Pipfile.lock` - These files specify the required packages for building the container.
 
@@ -270,4 +270,3 @@ To run Dockerfile - enter the below commands in your local terminal:
 * cd ~/src/model-deployment/
 * chmod +x docker-shell.sh
 * ./docker-shell.sh
-

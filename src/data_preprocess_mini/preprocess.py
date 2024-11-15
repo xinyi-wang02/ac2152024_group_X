@@ -1,5 +1,4 @@
 import os
-import shutil
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 import argparse
@@ -78,7 +77,6 @@ def process_images(data_dir, image_output_dir, output_prefix, image_names):
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(description="Preprocess Data to GCP")
 
     parser.add_argument("-t", "--train")
@@ -109,12 +107,10 @@ if __name__ == "__main__":
     label_path = os.path.join(output_dir, "class_label.csv")
     df.to_csv(label_path, index=False)
 
-    label_mapping_df = pd.DataFrame(
-        {
-            "label": label_encoder.classes_,
-            "label_encoded": label_encoder.transform(label_encoder.classes_),
-        }
-    )
+    label_mapping_df = pd.DataFrame({
+        "label": label_encoder.classes_,
+        "label_encoded": label_encoder.transform(label_encoder.classes_),
+    })
     map_path = os.path.join(output_dir, "class_label_dictionary.csv")
     label_mapping_df.to_csv(map_path, index=False)
 
