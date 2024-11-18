@@ -1,23 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car Model Identifier</title>
-    <link rel="stylesheet" href="styles.css"> 
+    <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
     <div class="container">
-        <h1>Car Model Identifier</h1>
-        <form id="uploadForm">
-            <input type="file" id="carPhoto" name="carPhoto" accept="image/*" required>
-            <button type="submit">Upload and Identify</button>
-        </form>
-        <div id="predictionResult"></div>
+        <header class="header">
+            <h1>🚗 Car Model Identifier</h1>
+            <p class="subtitle">Upload a car photo to identify the make, model, and year.</p>
+        </header>
+        
+        <main>
+            <form id="uploadForm" class="upload-form">
+                <input type="file" id="carPhoto" name="carPhoto" accept="image/*" required>
+                <button type="submit" class="btn-submit">Upload and Identify</button>
+            </form>
+            <div id="predictionResult" class="result-box">
+                <p class="placeholder">Your prediction results will appear here.</p>
+            </div>
+        </main>
     </div>
+
     <script src="main.js"></script>
 </body>
-
 </html>
