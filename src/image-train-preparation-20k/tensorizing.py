@@ -2,6 +2,7 @@ import os
 import argparse
 import pandas as pd
 import tensorflow as tf
+from sklearn.model_selection import train_test_split
 from google.cloud import storage
 from io import BytesIO
 from PIL import Image
@@ -22,8 +23,13 @@ def download_data(source_bucket_name, csv_blob_name, local_image_dir, local_csv_
     # Read CSV to get image names
     df = pd.read_csv(local_csv_path)
 
-    # Randomly sample `sample_size` (default 20k) images
-    df_sampled = df.sample(n=sample_size, random_state=42)
+    # Stratified sampling to sample `sample_size` (default 20k) images
+    df_sampled, _ = train_test_split(
+        df, 
+        train_size=sample_size, 
+        stratify=df['label'], 
+        random_state=42
+    )
     
     # Ensure the local image directory exists
     os.makedirs(local_image_dir, exist_ok=True)
