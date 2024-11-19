@@ -169,9 +169,9 @@ Kaggle Stanford Cars - [link](https://www.kaggle.com/datasets/jutrera/stanford-c
 
 #### Preprocess container (data-preprocess)
 
--   This container reads local data (downloaded from Kaggle), resizes the images to 224x224, perform data augmentation (flipping, rotating +/- 15 degrees, adjusting brightness) on the images, generate a CSV file that saves image paths and their corresponding labels, and save all images (original and augmented) to GCS bucket.
--   Input to this container is local image folder location and destincation GCS Bucket, secrets needed - via docker
--   Output from this container stored at GCS Bucket
+*This container reads local data (downloaded from Kaggle), resizes the images to 224x224, perform data augmentation (flipping, rotating +/- 15 degrees, adjusting brightness) on the images, generate a CSV file that saves image paths and their corresponding labels, and save all images (original and augmented) to GCS bucket.
+*Input to this container is local image folder location and destincation GCS Bucket, secrets needed - via docker
+*Output from this container stored at GCS Bucket
 
 (1)`src/data-preprocess/data_loader.py` - Here we upload our local data to the destination GCS Bucket.
 
@@ -288,7 +288,11 @@ To run Dockerfile - enter the below commands in your local terminal:
 -   chmod +x docker-shell.sh
 -   ./docker-shell.sh
 
-The following is a screenshot of our Vertex AI pipeline and the images that have been uploaded to GCP. ![image](<img width="748" alt="vertex AI pipeline" src="https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/vertex_ai.png">) In the final version of the pipeline, model training will be excluded as we plan to train our final model using Google Colab for easier access to GPU resources. However, this demonstration showcases the full pipeline flow using a smaller model.
+The following is a screenshot of our Vertex AI pipeline and the images that have been uploaded to GCP.
+
+![vertex AI pipeline](https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/vertex_ai.png)
+
+In the final version of the pipeline, model training will be excluded as we plan to train our final model using Google Colab for easier access to GPU resources. However, this demonstration showcases the full pipeline flow using a smaller model.
 
 #### API container (api-service)
 
@@ -321,7 +325,10 @@ in your local terminal, type the following commands:
 * chmod +x docker-shell.sh 
 * ./docker-shell.sh
 
-The following is a screenshot of our FastAPI `docs` interface. ![image](<img width="748" alt="API screenshot" src="https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/api.png">)
+The following is a screenshot of our FastAPI `docs` interface. 
+
+![API screenshot](https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/api.png)
+
 
 #### Frontend container (frontend)
 
@@ -373,8 +380,9 @@ and paste "127.0.0.1:8080" in your browser to interact with the webpage.
 
 After setting up the application as described above, you can upload car images and receive predictions from our model. Please ensure that the images are static and in formats such as `.jpg`, `.jpeg`, `.png`, `.webp`, etc.
 
-The following is a screenshot of our frontend with an example. 
-![image](<img width="748" alt="frontend example" src="https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/frontend.png">)
+The following is a screenshot of our frontend with an example.
+
+![frontend example](https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/frontend.png)
 
 #### Test container and Documentation (tests)
 
