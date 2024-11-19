@@ -297,7 +297,7 @@ To run Dockerfile - enter the below commands in your local terminal:
 * ./docker-shell.sh
 
 The following is a screenshot of our Vertex AI pipeline and the images that have been uploaded to GCP. 
-![image](<Placeholder>)
+![image](<img width="748" alt="vertex AI pipeline" src="https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/vertex_ai.png">)
 In the final version of the pipeline, model training will be excluded as we plan to train our final model using Google Colab for easier access to GPU resources. However, this demonstration showcases the full pipeline flow using a smaller model.
 
 
@@ -333,7 +333,7 @@ in your local terminal, type the following commands:
 * ./docker-shell.sh
 
 The following is a screenshot of our FastAPI `docs` interface. 
-![image](<Placeholder>)
+![image](<img width="748" alt="API screenshot" src="https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/api.png">)
 
 
 #### Frontend container (frontend) ####
@@ -386,7 +386,7 @@ and paste "127.0.0.1:8080" in your browser to interact with the webpage.
 After setting up the application as described above, you can upload car images and receive predictions from our model. Please ensure that the images are static and in formats such as `.jpg`, `.jpeg`, `.png`, `.webp`, etc.
 
 The following is a screenshot of our frontend with an example. 
-![image](<Placeholder>)
+![image](<img width="748" alt="frontend example" src="https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/frontend.png">)
 
 
 #### Test container and Documentation (tests) ####
@@ -424,7 +424,7 @@ Instructions to Run Tests Manually:
 
 
 The following is a screenshot of our coverage report. 
-![image](<Placeholder>)
+![image](<img width="748" alt="test coverage" src="https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/coverage.png">)
 
 We will continue to test more functions and integrate our entire pipeline with the existing test workflow.
 
