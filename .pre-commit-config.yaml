@@ -12,4 +12,3 @@ repos:
         args: [ --fix, --exit-non-zero-on-fix, --preview ]
       - id: ruff-format
         args: [ --preview ]
-        
