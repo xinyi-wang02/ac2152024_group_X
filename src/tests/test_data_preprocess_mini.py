@@ -5,7 +5,7 @@ from conftest import TEST_BUCKET_NAME, delete_ds_store_files, count_files
 from google.cloud import storage
 import os
 
-
+# test comment
 def test_uploader():
     source_directory = "resources/upload_test_images"
     data_loader.upload_directory_with_transfer_manager(
