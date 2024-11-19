@@ -1,0 +1,20 @@
+name: "Pipeline Lint"
+
+on:
+  push:
+    branches:
+    - 'main'
+    - 'milestone4'
+  pull_request:
+
+
+jobs:
+  lint:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: install
+      run: pip install pre-commit
+    - name: lint
+      run: pre-commit run --all-files
