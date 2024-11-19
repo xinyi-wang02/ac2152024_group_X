@@ -169,9 +169,9 @@ Kaggle Stanford Cars - [link](https://www.kaggle.com/datasets/jutrera/stanford-c
 
 #### Preprocess container (data-preprocess)
 
-*This container reads local data (downloaded from Kaggle), resizes the images to 224x224, perform data augmentation (flipping, rotating +/- 15 degrees, adjusting brightness) on the images, generate a CSV file that saves image paths and their corresponding labels, and save all images (original and augmented) to GCS bucket.
-*Input to this container is local image folder location and destincation GCS Bucket, secrets needed - via docker
-*Output from this container stored at GCS Bucket
+-   This container reads local data (downloaded from Kaggle), resizes the images to 224x224, perform data augmentation (flipping, rotating +/- 15 degrees, adjusting brightness) on the images, generate a CSV file that saves image paths and their corresponding labels, and save all images (original and augmented) to GCS bucket.
+-   Input to this container is local image folder location and destincation GCS Bucket, secrets needed - via docker
+-   Output from this container stored at GCS Bucket
 
 (1)`src/data-preprocess/data_loader.py` - Here we upload our local data to the destination GCS Bucket.
 
@@ -317,13 +317,13 @@ In the final version of the pipeline, model training will be excluded as we plan
 (8)`src/api-service/entrypoint.sh` - This script outlines the actions to be performed after entering the container, such as training the model and uploading the model parameters to the target GCS bucket.
 
 To run Dockerfile - follow the steps below: 
-*create folder `~/src/api-service/no_ship/` 
-*copy secret json file to `~/src/api-service/no_ship/`
+-   create folder `~/src/api-service/no_ship/` 
+-   copy secret json file to `~/src/api-service/no_ship/`
 
 in your local terminal, type the following commands: 
-* cd \~/src/api-service/ 
-* chmod +x docker-shell.sh 
-* ./docker-shell.sh
+-   cd \~/src/api-service/ 
+-   chmod +x docker-shell.sh 
+-   ./docker-shell.sh
 
 The following is a screenshot of our FastAPI `docs` interface. 
 
@@ -362,17 +362,17 @@ In order to run the app on local, we first follow the steps below to set up and 
 -   copy secret json file to `~/src/api-service/no_ship/`
 
 in your local terminal, type the following commands: 
-* cd ~/src/api-service/ 
-* chmod +x docker-shell.sh 
-* ./docker-shell.sh
+-   cd ~/src/api-service/ 
+-   chmod +x docker-shell.sh 
+-   ./docker-shell.sh
 
 Then, we continue in the frontend container, type the following commands: 
-* cd ~/src/frontend/ 
-* chmod +x docker-shell.sh 
-* ./docker-shell.sh
+-   cd ~/src/frontend/ 
+-   chmod +x docker-shell.sh 
+-   ./docker-shell.sh
 
 After the container is running, type the following command: 
-* http-server
+-   http-server
 
 and paste "127.0.0.1:8080" in your browser to interact with the webpage.
 
