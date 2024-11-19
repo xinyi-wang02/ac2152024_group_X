@@ -17,4 +17,4 @@ jobs:
     - name: install
       run: pip install pre-commit
     - name: lint
-      run: cd src && pre-commit run --all-files
+      run: pre-commit run --all-files
