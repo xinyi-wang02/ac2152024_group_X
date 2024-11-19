@@ -21,6 +21,9 @@ RUN mkdir -p no_ship
 
 RUN mkdir -p dev
 
+# Regenerate Pipfile.lock based on Pipfile
+RUN pipenv lock
+
 RUN pipenv sync
 RUN chmod +x entrypoint.sh
 # Entry point
