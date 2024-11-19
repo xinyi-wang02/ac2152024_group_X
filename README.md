@@ -409,7 +409,8 @@ The following is a screenshot of our frontend with an example.
 Instructions to Run Tests Manually:
 
 The following is a screenshot of our coverage report. 
-![image](<img width="748" src="https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/coverage.png">)
+
+![coverage report](https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/coverage.png)
 
 We will continue to test more functions and integrate our entire pipeline with the existing test workflow.
 
