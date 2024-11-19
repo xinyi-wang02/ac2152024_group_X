@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File
+from fastapi import FastAPI, File, UploadFile
 from starlette.middleware.cors import CORSMiddleware
 from typing import Dict, List, Union
 
@@ -8,11 +8,10 @@ from google.protobuf.struct_pb2 import Value
 import base64
 import json
 
-with open("label_dictionary.json") as json_file:
+with open('label_dictionary.json') as json_file:
     label_data = json.load(json_file)
 
 labels_dict = label_data["label"]
-
 
 def predict_custom_trained_model_sample(
     project: str,
@@ -63,16 +62,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 @app.post("/predict")
 async def predict(image: bytes = File(...)):
     image_bytes = base64.b64encode(image).decode("utf-8")
 
     predictions = predict_custom_trained_model_sample(
-        project="771277464269",
-        endpoint_id="270973541153767424",
-        location="us-central1",
-        instances={"bytes_inputs": {"b64": image_bytes}},
+    project="771277464269",
+    endpoint_id="270973541153767424",
+    location="us-central1",
+    instances={"bytes_inputs": {"b64": image_bytes}},
     )
 
     result = []
@@ -80,3 +78,4 @@ async def predict(image: bytes = File(...)):
     for prediction in predictions:
         result.append(labels_dict[str(prediction.index(max(prediction)))])
     return {"predicted_car_types": result}
+
