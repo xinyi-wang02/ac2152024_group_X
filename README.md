@@ -10,8 +10,8 @@ Project Organization
 │   ├── eda_notebook.ipynb
 │   └── model_testing.ipynb
 ├── images
-│   ├── 
-│   └── 
+│   ├──
+│   └──
 ├── reports
 │   └── AC215_project_proposal_group16_updated.pdf
 ├── README.md
@@ -90,14 +90,14 @@ Project Organization
     │   │   │   │   ├── Acura RL Sedan 2012
     │   │   │   │   │   └── 00183.jpg
     │   │   │   │   │   └── 00249.jpg
-    │   │   │   ├── train    
+    │   │   │   ├── train
     │   │   │   │   └── Acura Integra Type R 2001
     │   │   │   │   │   └── 00198.jpg
     │   │   │   │   │   └── 00255.jpg
     │   │   │   │   ├── Acura RL Sedan 2012
     │   │   │   │   │   └── 00670.jpg
     │   │   │   │   │   └── 00691.jpg
-    │   │   ├── upload_test_images   
+    │   │   ├── upload_test_images
     │   │   │   └── test_images
     │   │   │   │   └── 00128.jpg
     │   ├── conftest.py
@@ -116,7 +116,7 @@ Project Organization
     ├── Dockerfile
     ├── Pipfile
     ├── Pipfile.lock
-    ├── 
+    ├──
     ├── entrypoint.sh
     └── docker-shell.sh
 ```
@@ -133,25 +133,25 @@ Project Organization
 
 In this milestone we re-constructed most parts of the project in a new repository:
 
-```         
+```
   (1) Preprocess container [/src/data-preprocess/](src/data-preprocess/)
-  
+
   (2) Tensorizing container [/src/image_train_preparation/](src/image_train_preparation/)
-  
+
   (3) Model training container [/src/model-training/](src/model-training/)
 
   (4) Model deployment on VertexAI container [/src/model-deployment/](src/model-deployment/)
 
   (5) Model pipeline [/src/workflow/](src/workflow/)
-  
+
   (6) API service [/src/api-service/](src/api-service/)
-   
+
   (7) Frontend Simple container [/src/frontend/](src/frontend/)
-  
+
   (8) Test container and documentation [/src/tests/](src/tests/)
-  
+
   (9) Notebook explanation
-  
+
   (10) GCP Bucket structure
 ```
 
@@ -316,16 +316,16 @@ In the final version of the pipeline, model training will be excluded as we plan
 
 (8)`src/api-service/entrypoint.sh` - This script outlines the actions to be performed after entering the container, such as training the model and uploading the model parameters to the target GCS bucket.
 
-To run Dockerfile - follow the steps below: 
--   create folder `~/src/api-service/no_ship/` 
+To run Dockerfile - follow the steps below:
+-   create folder `~/src/api-service/no_ship/`
 -   copy secret json file to `~/src/api-service/no_ship/`
 
-in your local terminal, type the following commands: 
--   cd \~/src/api-service/ 
--   chmod +x docker-shell.sh 
+in your local terminal, type the following commands:
+-   cd \~/src/api-service/
+-   chmod +x docker-shell.sh
 -   ./docker-shell.sh
 
-The following is a screenshot of our FastAPI `docs` interface. 
+The following is a screenshot of our FastAPI `docs` interface.
 
 ![API screenshot](https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/api.png)
 
@@ -361,17 +361,17 @@ In order to run the app on local, we first follow the steps below to set up and 
 -   create folder `~/src/api-service/no_ship/`
 -   copy secret json file to `~/src/api-service/no_ship/`
 
-in your local terminal, type the following commands: 
--   cd ~/src/api-service/ 
--   chmod +x docker-shell.sh 
+in your local terminal, type the following commands:
+-   cd ~/src/api-service/
+-   chmod +x docker-shell.sh
 -   ./docker-shell.sh
 
-Then, we continue in the frontend container, type the following commands: 
--   cd ~/src/frontend/ 
--   chmod +x docker-shell.sh 
+Then, we continue in the frontend container, type the following commands:
+-   cd ~/src/frontend/
+-   chmod +x docker-shell.sh
 -   ./docker-shell.sh
 
-After the container is running, type the following command: 
+After the container is running, type the following command:
 -   http-server
 
 and paste "127.0.0.1:8080" in your browser to interact with the webpage.
@@ -416,7 +416,7 @@ The following is a screenshot of our frontend with an example.
 
 Instructions to Run Tests Manually:
 
-The following is a screenshot of our coverage report. 
+The following is a screenshot of our coverage report.
 
 ![coverage report](https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/coverage.png)
 
