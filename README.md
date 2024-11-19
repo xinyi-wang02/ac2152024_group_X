@@ -6,12 +6,23 @@ Project Organization
 
 ``` bash
 ├── LICENSE
+├── .github/workflows
+│   ├── .github/workflows/lint.yml
+│   └── .github/workflows/unit_tests.yml
 ├── notebooks
 │   ├── eda_notebook.ipynb
 │   └── model_testing.ipynb
 ├── images
-│   ├──
-│   └──
+│   ├── api.png
+│   ├── coverage.png
+│   ├── eda_manu.png
+│   ├── eda_year.png
+│   ├── frontend.png
+│   ├── lint.png
+│   ├── sol_arch.png
+│   ├── tech_arch.png
+│   ├── vertex_ai.png
+│   └── wnb_ip.png
 ├── reports
 │   └── AC215_project_proposal_group16_updated.pdf
 ├── README.md
@@ -35,7 +46,7 @@ Project Organization
     │   ├── download.py
     │   ├── entrypoint.sh
     │   ├── docker-shell.sh
-    ├── data_preprocess
+    ├── data-preprocess
     │   ├── Dockerfile
     │   ├── Pipfile
     │   ├── Pipfile.lock
@@ -116,7 +127,7 @@ Project Organization
     ├── Dockerfile
     ├── Pipfile
     ├── Pipfile.lock
-    ├──
+    ├── pre-commit-config.yaml
     ├── entrypoint.sh
     └── docker-shell.sh
 ```
@@ -155,13 +166,24 @@ In this milestone we re-constructed most parts of the project in a new repositor
   (10) GCP Bucket structure
 ```
 
+NOTE:
+There are 2 different workflows under construction now. The milestone 4 deliverable is completed with a mini batch of our data to demonstrate our Vertex AI pipeline (data preprocessing, data tensorizing, model training, and model deployment), API service, frontend, CI/CD, and testing.
+
+For our final workflow, we will perform data preprocessing, data tensorizing, and model deployment using model trained with Google Colab and saved on Weights and Biases. This is currently under develop with scripts in the folder `src/image-train-preparation-20k` that performs stratified sampling from the ~90,000 augmented car images, and trained with Google Colab notebook formated as `src/model-training/model_training_inceptionV3.py`.
+
+
 #### Application Design
 
 Below are the Solutions Architecture and Technical Architecture diagrams. These diagrams illustrate how the different system components interact to classify car images.
 
-**Solution Architecture** ![image](Placeholder)
+**Solution Architecture** ![sol_arch](https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/sol_arch.png)
 
-**Technical Architecture** ![image](Placeholder)
+**Technical Architecture** ![tech_arch](https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/tech_arch.png)
+
+Description:
+Our solution and technical architecture is an automated ML pipeline that processes and augments uploaded image data stored in a GCS bucket (sourced from Kaggle), tensorizes the image data to prepare it for training, and deploys the trained model. Model training is conducted in Colab notebooks using GPU resources, with experiments and models logged in Weights and Biases, where the best-performing model is selected for deployment on Vertex AI. An endpoint is then created to host our API service, and a corresponding frontend is developed so users can upload car photos and receive car model predictions.
+
+Our workflow starts by downloading the Kaggle dataset locally and uploading it to a GCS bucket. We then submit a Cloud Run job to preprocess and augment the photos, storing the results in a new folder in the same bucket, along with a CSV file containing image class information. Next, we submit another Cloud Run job to tensorize the images and save them in a separate bucket for tensorized images. Model training is done in Google Colab with GPU, and the trained model is stored in Weights and Biases. Finally, the best model is deployed to Vertex AI, and we develop a web-based application to host the API and provide an interface for users to upload car images and receive model predictions.
 
 #### Dataset
 
@@ -170,7 +192,7 @@ Kaggle Stanford Cars - [link](https://www.kaggle.com/datasets/jutrera/stanford-c
 #### Preprocess container (data-preprocess)
 
 -   This container reads local data (downloaded from Kaggle), resizes the images to 224x224, perform data augmentation (flipping, rotating +/- 15 degrees, adjusting brightness) on the images, generate a CSV file that saves image paths and their corresponding labels, and save all images (original and augmented) to GCS bucket.
--   Input to this container is local image folder location and destincation GCS Bucket, secrets needed - via docker
+-   Input to this container is local image folder location and destination GCS Bucket, secrets needed - via docker
 -   Output from this container stored at GCS Bucket
 
 (1)`src/data-preprocess/data_loader.py` - Here we upload our local data to the destination GCS Bucket.
@@ -192,6 +214,12 @@ To run Dockerfile - enter the below commands in your local terminal:
 -   ./docker-shell.sh
 
 #### Mini Preprocess container (data_preprocess_mini)
+
+This folder follows the exact same structure as the previous one: `src/data-preprocess`
+
+There is 1 additional script compared with `src/data-preprocess`
+
+(1)`src/data_preprocess_mini/download.py` - Here we download content in our GCP Bucket to local before tensorizing the images.
 
 #### Tensorizing container (image_train_preparation)
 
@@ -216,6 +244,12 @@ To run Dockerfile - enter the below commands in your local terminal:
 -   ./docker-shell.sh
 
 #### Tensorizing container (image-train-preparation-20k)
+
+This folder follows the exact same structure as the previous one: `src/image_train_preparation`
+
+The major modification is in the script `src/data-preprocess`
+
+(1)`src/data_preprocess_mini/download.py` - Here we download content in our GCP Bucket to local before tensorizing the images.
 
 #### Model training container (model-training)
 
@@ -321,7 +355,7 @@ To run Dockerfile - follow the steps below:
 -   copy secret json file to `~/src/api-service/no_ship/`
 
 in your local terminal, type the following commands:
--   cd \~/src/api-service/
+-   cd ~/src/api-service/
 -   chmod +x docker-shell.sh
 -   ./docker-shell.sh
 
@@ -414,7 +448,20 @@ The following is a screenshot of our frontend with an example.
 
 (10)`src/tests/resources` - This folder contains the images that were used during testing.
 
-Instructions to Run Tests Manually:
+Instructions to Run Tests Manually
+
+enter the below commands in your local terminal:
+-   cd ~/src/
+-   chmod +x docker-shell.sh
+-   ./docker-shell.sh
+
+if the user would like to test a single function, type the following after container is running:
+-   ./run_single_test.sh
+
+if the user would like to test all function, type the following after container is running:
+-   ./run_test.sh
+
+The user could change the function that they would like to test in `run_single_test.sh`
 
 The following is a screenshot of our coverage report.
 
@@ -422,7 +469,30 @@ The following is a screenshot of our coverage report.
 
 We will continue to test more functions and integrate our entire pipeline with the existing test workflow.
 
+The following is a screenshot of our linting test.
+
+![lint](https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/lint.png)
+
 #### Notebook
+
+As we can see from the following 2 plots from our EDA notebook:
+
+![eda_manu](https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/eda_manu.png)
+![eda_manu](https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/eda_year.png)
+
+There is a noticeable class imbalance in the dataset, with an overrepresentation of Chevrolet cars and cars produced in 2012. To address this, we used stratified sampling before model training to ensure that the training set maintains the same class proportions as the original dataset, which is crucial for handling uneven class distributions. Stratified sampling also prevents the extreme scenario where all sampled images belong to a single class, leading to a model that can only make a limited range of predictions.
+
+In `model_testing.ipynb`, we experimented with 3 different model structure to perform model training (finetuning).
+
+CarNetV1 and CarNetV2 use ResNet152V2, a deep convolutional neural network known for its  effective feature extraction and improved training stability. CarNetV1 uses a single dense layer before the output, while CarNetV2 incorporates two dense layers for potentially more complex feature transformation.
+
+CarNetV3 utilizes InceptionV3, which employs a different architecture focusing on multi-scale feature extraction through its inception modules, providing diversity in feature learning. These variations help us assess which architecture and layer configuration work best for distinguishing between car models, considering both depth and structure differences.
+
+Additionally, we implemented early stopping in all models to monitor validation loss during training and prevent overfitting by stopping training when performance stops improving, which ensures that the models could generalize better to unseen data.
+
+Here is an example screenshot showing the metrics from our model experiments logged in Weights and Biases.
+
+![wnb_ip](https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/wnb_ip.png)
 
 **GCP Bucket Structure**
 
