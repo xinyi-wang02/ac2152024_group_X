@@ -161,9 +161,13 @@ In this milestone we re-constructed most parts of the project in a new repositor
 
   (8) Test container and documentation [/src/tests/](src/tests/)
 
-  (9) Notebook explanation
+  (9) How to check CI/CD test results?
 
-  (10) GCP Bucket structure
+  (10) Why linting and how to perform linting?
+
+  (11) Notebook explanation
+
+  (12) GCP Bucket structure
 ```
 
 NOTE:
@@ -432,7 +436,7 @@ The following is a screenshot of our frontend with an example.
 
 (2)`src/tests/test_image_train_preparation.py` - The script tests the `download_data` function in `src/image_train_preparation/tensorizing.py` to ensure it can accurately download image and CSV data from a specified cloud storage bucket and save it to a local directory, verifying that the expected number of images and CSV files are present after the download.
 
-(3)`src/tests/conftest.py` - This script tests functions for managing and counting files in a directory, including removing .DS_Store files and recursively counting files of a specified type?
+(3)`src/tests/conftest.py` - This is a conventional script that we include in testing.
 
 (4)`src/tests/run_single_test.sh` - This script runs the test function `test_download_data`, from `test_image_train_preparation.py` to verify that the `download_data` function in `src/image_train_preparation/tensorizing.py`.
 
@@ -467,11 +471,27 @@ The following is a screenshot of our coverage report.
 
 ![coverage report](https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/coverage.png)
 
-We will continue to test more functions and integrate our entire pipeline with the existing test workflow.
-
 The following is a screenshot of our linting test.
 
 ![lint](https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/lint.png)
+
+
+#### How to check CI/CD test results?
+
+The functions that we are testing are listed in the section above. We tested the function to upload and download files between local and GCS Bucket because we want to ensure that our file transfer workflow is smooth and errorless. We also tested the functions that preprocesses images because we need to ensure that the preprocessing procedures are consistent and replicable for all processed images.
+
+In order to check our CI/CD results, go to `Actions` tab of this repo, find `Pipeline Unit Tests` in the panel on the left, you can see a log of automated testing for each push.
+
+We will continue to test more functions and integrate our entire pipeline with the existing test workflow.
+
+#### Why linting and how to perform linting?
+
+Linting is essential in this project because it helps maintain code quality, readability, and consistency. By automatically checking for programming errors, potential bugs, and stylistic issues, linting ensures that the code adheres to best practices and coding standards.
+
+We used [Ruff](https://docs.astral.sh/ruff/) and [pre-commit](https://pre-commit.com/) to implement our linting pipeline. We specified our configuration in `.pre-commit-config.yaml` to remove any trailing whitespaces at the end of lines in the code files and ensures that all files end with a newline. Then, we add `.github/workflows/lint.yml` so that it automatically runs pre-commit linting checks whenever code is pushed to the main or `milestone4` branches or when a pull request is created, ensuring that any code changes comply with the project's linting rules before merging.
+
+In order to check our linting results, go to `Actions` tab of this repo, find `Pipeline Lint` in the panel on the left, you can see a log of automated linting check for each push.
+
 
 #### Notebook
 
