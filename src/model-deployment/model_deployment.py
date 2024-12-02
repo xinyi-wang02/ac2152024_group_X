@@ -1,10 +1,10 @@
 from google.cloud import aiplatform
 
-BUCKET_URI = "gs://mini_model_wnb/test_model"
+BUCKET_URI = "gs://model_wnb/carnet_v3_50epoch"
 PREBUILT_PREDICRION_CONTAINER = (
-    "us-docker.pkg.dev/vertex-ai/prediction/tf2-cpu.2-13:latest"
+    "us-docker.pkg.dev/vertex-ai-restricted/prediction/tf_opt-cpu.2-17:latest"
 )
-MODEL_NAME = "test model"
+MODEL_NAME = "test_full_model_v2"
 print("Deploy model")
 # Upload and Deploy model to Vertex AI
 deployed_model = aiplatform.Model.upload(

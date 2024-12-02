@@ -17,6 +17,8 @@ RUN set -ex; \
 # Add Pipfile, Pipfile.lock + python code
 ADD . /
 
+EXPOSE 9000
+
 RUN mkdir -p no_ship
 
 RUN mkdir -p dev
