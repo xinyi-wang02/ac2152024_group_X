@@ -5,6 +5,7 @@ on:
     branches:
     - 'main'
     - 'milestone4'
+    - 'milestone5'
   pull_request:
 
 
