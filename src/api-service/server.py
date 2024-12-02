@@ -70,7 +70,7 @@ async def predict(image: bytes = File(...)):
 
     predictions = predict_custom_trained_model_sample(
         project="771277464269",
-        endpoint_id="270973541153767424",
+        endpoint_id="5886636821042954240",
         location="us-central1",
         instances={"bytes_inputs": {"b64": image_bytes}},
     )

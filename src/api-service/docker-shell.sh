@@ -9,7 +9,7 @@ export BASE_DIR=$(pwd)
 export LOCAL_MOUNT_DIR="./no_ship"
 
 # Build the image based on the Dockerfile
-docker build --no-cache -t $IMAGE_NAME -f Dockerfile .
+# docker build --no-cache -t $IMAGE_NAME -f Dockerfile .
 #docker build -t $IMAGE_NAME --platform=linux/amd64 -f Dockerfile .
 
 # Run the container
@@ -18,5 +18,5 @@ docker run --rm \
 -e GOOGLE_APPLICATION_CREDENTIALS='/no_ship/ai-service-account.json' \
 -v $LOCAL_MOUNT_DIR:/no_ship \
 -v "./":/app \
--p 9191:9191 \
+-p 9000:9000 \
 -ti $IMAGE_NAME
