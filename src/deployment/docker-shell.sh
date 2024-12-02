@@ -7,7 +7,7 @@
 export IMAGE_NAME="multiclass-car-deployment"
 export BASE_DIR=$(pwd)
 export SECRETS_DIR=$(pwd)/secrets/
-export GCP_PROJECT="multiclass-car-project-demo" 
+export GCP_PROJECT="multiclass-car-project-demo"
 export GCP_ZONE="us-central1-a"
 export GOOGLE_APPLICATION_CREDENTIALS=/secrets/deployment.json
 
