@@ -6,8 +6,12 @@ import json
 from google.cloud import aiplatform, storage
 from google.protobuf import json_format
 from google.protobuf.struct_pb2 import Value
-import os
-import io
+import google.cloud.aiplatform as aip
+from kfp import dsl
+from kfp import compiler
+import random
+import string
+
 
 # -------------------------------------------------------------------
 # Loading Label Dictionary
@@ -23,6 +27,7 @@ image_upload_count = 0
 # GCS Bucket details
 GCS_BUCKET_NAME = "215-multiclass-car-bucket"
 GCS_BASE_PATH = "car_folder/train"
+
 
 # -------------------------------------------------------------------
 # Prediction Function
@@ -51,6 +56,7 @@ def predict_custom_trained_model_sample(
     predictions = response.predictions
     return predictions
 
+
 # -------------------------------------------------------------------
 # Code to upload image to GCS under predicted class directory
 # -------------------------------------------------------------------
@@ -62,11 +68,13 @@ def upload_image_to_gcs(image_bytes: bytes, predicted_label: str):
     # Generate a unique filename, e.g., using a timestamp
     # Or a random suffix. Here we use a simple approach:
     import uuid
+
     image_id = str(uuid.uuid4())
     blob_name = f"{GCS_BASE_PATH}/{predicted_label}/{image_id}.jpg"
     blob = bucket.blob(blob_name)
     blob.upload_from_string(image_bytes, content_type="image/jpeg")
     return blob_name
+
 
 # -------------------------------------------------------------------
 # FastAPI App Setup
@@ -80,6 +88,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # -------------------------------------------------------------------
 # Endpoint: /predict
@@ -115,24 +124,25 @@ async def predict_endpoint(image: bytes = File(...)):
 # -------------------------------------------------------------------
 # Below is the pipeline code without the deployment step
 # -------------------------------------------------------------------
-import google.cloud.aiplatform as aip
-from kfp import dsl
-from kfp import compiler
-import random
-import string
 
 BUCKET_URI = "gs://mini-pipeline"
 BUCKET_ROOT = "gs://mini-pipeline/vertext_pipeline_root"
 DATA_PREPROCESSING_IMAGE = "us-central1-docker.pkg.dev/multiclass-car-project-demo/ml-pipeline/data-preprocessing"
 IMAGE_TRAIN_PREPARATION_IMAGE = "us-central1-docker.pkg.dev/multiclass-car-project-demo/ml-pipeline/image_train_preparation"
-MODEL_TRAIN_IMAGE = "us-central1-docker.pkg.dev/multiclass-car-project-demo/ml-pipeline/model_training"
+MODEL_TRAIN_IMAGE = (
+    "us-central1-docker.pkg.dev/multiclass-car-project-demo/ml-pipeline/model_training"
+)
 MODEL_DEPLOYMENT_IMAGE = "us-central1-docker.pkg.dev/multiclass-car-project-demo/ml-pipeline/model_deployment"
 
 GCP_PROJECT_ID = "multiclass-car-project-demo"
-GCP_SERVICE_ACCOUNT = "ai-service-account@multiclass-car-project-demo.iam.gserviceaccount.com"
+GCP_SERVICE_ACCOUNT = (
+    "ai-service-account@multiclass-car-project-demo.iam.gserviceaccount.com"
+)
+
 
 def generate_uuid(length: int = 8) -> str:
     return "".join(random.choices(string.ascii_lowercase + string.digits, k=length))
+
 
 @dsl.container_component
 def data_preprocessing_component():
@@ -143,6 +153,7 @@ def data_preprocessing_component():
     )
     return container_spec
 
+
 @dsl.container_component
 def tensorizing_component():
     container_spec = dsl.ContainerSpec(
@@ -152,6 +163,7 @@ def tensorizing_component():
     )
     return container_spec
 
+
 @dsl.container_component
 def model_training_component():
     container_spec = dsl.ContainerSpec(
@@ -160,6 +172,7 @@ def model_training_component():
         args=[],
     )
     return container_spec
+
 
 # Original pipeline (for reference)
 # @dsl.pipeline
@@ -183,6 +196,7 @@ def model_training_component():
 #         .after(model_training_task)
 #     )
 
+
 # New pipeline without the deployment step
 @dsl.pipeline
 def ml_pipeline_no_deploy():
@@ -194,20 +208,24 @@ def ml_pipeline_no_deploy():
         .set_display_name("ImageTensor Preparation")
         .after(preprocessing_task)
     )
-    model_training_task = (
+    _ = (
         model_training_component()
         .set_display_name("Model Training")
         .after(tensorizing_task)
     )
     # No model deployment step here.
 
-compiler.Compiler().compile(ml_pipeline_no_deploy, package_path="pipeline_no_deploy.yaml")
+
+compiler.Compiler().compile(
+    ml_pipeline_no_deploy, package_path="pipeline_no_deploy.yaml"
+)
 
 
 # -------------------------------------------------------------------
 # Functions for uploading a new model version
 # -------------------------------------------------------------------
-from typing import List
+
+
 def upload_new_model_version_using_custom_training_pipeline(
     display_name: str,
     script_path: str,
@@ -248,10 +266,12 @@ def upload_new_model_version_using_custom_training_pipeline(
     )
     return model
 
+
 def create_default_model_sample(model_id: str, project: str, location: str):
     aiplatform.init(project=project, location=location)
     default_model = aiplatform.Model(model_name=model_id)
     return default_model
+
 
 # -------------------------------------------------------------------
 # Endpoint to Trigger Pipeline Re-Run and New Model Version
