@@ -5,9 +5,12 @@ name = "pypi"
 
 [packages]
 google-cloud-aiplatform = "*"
+google-cloud-storage = "*"
 fastapi = "*"
 uvicorn = "*"
 python-multipart = "*"
+kfp = "*"
+protobuf = "*"
 
 [dev-packages]
 
