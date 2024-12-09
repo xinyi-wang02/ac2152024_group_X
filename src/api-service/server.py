@@ -279,7 +279,7 @@ def create_default_model_sample(model_id: str, project: str, location: str):
 @app.get("/trigger_pipeline")
 def trigger_pipeline():
     global image_upload_count
-    if image_upload_count > 100:
+    if image_upload_count > 1000:
         # Run the pipeline without deployment
         aip.init(project=GCP_PROJECT_ID, staging_bucket=BUCKET_URI)
         job_id = generate_uuid()
