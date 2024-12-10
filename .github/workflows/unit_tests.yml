@@ -21,10 +21,10 @@ jobs:
       with:
           credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_HARPER }}'
     - name: Set W&B API Key
-        env:
-          WANDB_API_KEY: ${{ secrets.WANDB_KEY }}
-        run: |
-          echo "W&B API key has been set."
+      env:
+        WANDB_KEY: ${{ secrets.WANDB_KEY }}
+      run: |
+        echo "W&B API key has been set."
     - name: Build Test Docker
       working-directory: ./src
       run: docker build -t dev_test_image -f Dockerfile .
