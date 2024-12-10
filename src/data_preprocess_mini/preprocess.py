@@ -39,7 +39,9 @@ def preprocess_image(image):
 
 
 # Function to copy images and record labels
-def process_images(data_dir, image_output_dir, output_prefix, image_names):
+def process_images(
+    data_dir, image_output_dir, output_prefix, image_names, image_data=[]
+):
     for class_name in os.listdir(data_dir):
         class_dir = os.path.join(data_dir, class_name)
         if os.path.isdir(class_dir):

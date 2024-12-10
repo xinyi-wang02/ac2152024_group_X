@@ -8,6 +8,7 @@ dvc = "~=3.0"
 
 [packages]
 google-cloud-storage = "*"
+google-cloud-aiplatform = "*"
 numpy = "*"
 pandas = "*"
 pyyaml = "*"
@@ -15,6 +16,8 @@ scikit-learn = "*"
 tqdm = "*"
 Pillow = "*"
 tensorflow = "*"
+gcsfs = "*"
+wandb = "*"
 pytest = "*"
 coverage = "*"
 

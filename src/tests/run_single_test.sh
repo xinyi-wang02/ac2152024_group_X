@@ -1,1 +1,1 @@
-python -m pytest ./test_image_train_preparation.py::test_download_data
+python -m pytest ./test_data_preprocess.py::test_uploader
