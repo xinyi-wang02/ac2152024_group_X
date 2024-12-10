@@ -29,7 +29,8 @@ jobs:
     - name: Run Unit Tests
       working-directory: ./src
       run: |-
-        docker run --name dev_test_image \
+        docker run --rm \
+        --name dev_test_image \
         --mount type=bind,source=$GOOGLE_APPLICATION_CREDENTIALS,target=/secrets/ai-service-account-harper.json \
         -e GOOGLE_APPLICATION_CREDENTIALS=/secrets/ai-service-account-harper.json \
         -e WANDB_KEY=${{ secrets.WANDB_KEY }}
