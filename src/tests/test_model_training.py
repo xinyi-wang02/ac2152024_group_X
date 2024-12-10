@@ -14,7 +14,7 @@ from model_training.model_training_v3 import (
 
 def test_parse_tfrecord():
     """Test parsing a TFRecord to ensure the function can handle actual TFRecord files."""
-    #tfrecord_path = "gs://mini-tensor-bucket/data.tfrecord"
+    # tfrecord_path = "gs://mini-tensor-bucket/data.tfrecord"
     local_tfrecord_path = "no_ship/test_data.tfrecord"
 
     # Download the TFRecord from the bucket

@@ -30,7 +30,7 @@ def test_download_data():
 
 
 def test_download_data_cover_image_download():
-    #csv_blob_name = "car_preprocessed_folder/class_label.csv"
+    # csv_blob_name = "car_preprocessed_folder/class_label.csv"
     output_dir = "no_ship/tensor_output_test"
     local_csv_path = os.path.join(output_dir, "class_label.csv")
     local_image_dir = os.path.join(output_dir, "all_images")
