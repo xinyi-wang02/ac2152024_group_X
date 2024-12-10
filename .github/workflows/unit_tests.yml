@@ -22,7 +22,7 @@ jobs:
           credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_HARPER }}'
     - name: Set W&B API Key
       run: |-
-        echo "WANDB_API_KEY=${{ secrets.WANDB_KEY }}" >> $GITHUB_ENV
+        echo "WANDB_KEY=${{ secrets.WANDB_KEY }}" >> $GITHUB_ENV
     - name: Build Test Docker
       working-directory: ./src
       run: docker build -t dev_test_image -f Dockerfile .
@@ -30,8 +30,7 @@ jobs:
       working-directory: ./src
       run: |-
         docker run --rm \
-        --name dev_test_image \
         --mount type=bind,source=$GOOGLE_APPLICATION_CREDENTIALS,target=/secrets/ai-service-account-harper.json \
         -e GOOGLE_APPLICATION_CREDENTIALS=/secrets/ai-service-account-harper.json \
-        -e WANDB_KEY=${{ secrets.WANDB_KEY }}
+        -e WANDB_KEY=${{ secrets.WANDB_KEY }} \
         dev_test_image
