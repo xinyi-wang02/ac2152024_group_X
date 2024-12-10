@@ -12,7 +12,7 @@ In this milestone, we completed the following tasks:
 
 -   Deploying on Kubernetes using Ansible
 -   CI/CD through Github Actions
--   
+-
 
 
 Project Organization
