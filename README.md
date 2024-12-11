@@ -10,11 +10,11 @@
 
 In this milestone, we completed the following tasks:
 
--   Deploying the frontend and API service containers on Kubernetes using Ansible
--   Add another API endpoint for model training pipeline trigger
--   CI/CD through Github Actions
--
-
+- Deploying the frontend and API service containers on Kubernetes using Ansible
+- Add another API endpoint for model training pipeline trigger
+- Unit tests across all containers & CI/CD through Github Actions
+- Containerized `model_training` for future users to train with GCP GPU resource
+- Shoot a [video](https://youtu.be/pk9pNsbs8Lk) and wrote a [Medium Post](Placeholder) to document our project
 
 Project Organization
 
@@ -23,6 +23,7 @@ Project Organization
 ├── .github/workflows
 │   ├── .github/workflows/lint.yml
 │   └── .github/workflows/unit_tests.yml
+│   └── .github/workflows/ci-cd.yml
 ├── notebooks
 │   ├── eda_notebook.ipynb
 │   └── model_testing.ipynb
@@ -39,9 +40,10 @@ Project Organization
 │   └── wnb_ip.png
 ├── reports
 │   └── AC215_project_proposal_group16_updated.pdf
+│   └── milestone4.md
 ├── README.md
 └── src
-    ├── api-service
+    ├── api_service
     │   ├── Dockerfile
     │   ├── pipfile
     │   ├── Pipfile.lock
@@ -50,7 +52,18 @@ Project Organization
     │   ├── car_preprocessed_folder_class_label_dictionary.csv
     │   ├── entrypoint.sh
     │   ├── docker-shell.sh
-    │   └── server.py
+    │   ├── server.py
+    │   └── README.md
+    ├── deployment
+    │   ├── nginx-config
+    │   │   └── nginx
+    │   ├── docker-shell.sh
+    │   ├── Dockerfile
+    │   ├── docker-entrypoint.sh
+    │   ├── deploy-docker-images.yml
+    │   ├── deploy-k8s-cluster.yml
+    │   ├── inventory.yml
+    │   └── README.md
     ├── data_preprocess_mini
     │   ├── Dockerfile
     │   ├── Pipfile
@@ -60,7 +73,8 @@ Project Organization
     │   ├── download.py
     │   ├── entrypoint.sh
     │   ├── docker-shell.sh
-    ├── data-preprocess
+    │   └── README.md
+    ├── data_preprocess
     │   ├── Dockerfile
     │   ├── Pipfile
     │   ├── Pipfile.lock
@@ -68,12 +82,17 @@ Project Organization
     │   ├── preprocess.py
     │   ├── entrypoint.sh
     │   ├── docker-shell.sh
+    │   └── README.md
     ├── frontend
+    │   ├── assests
+    │   │   └── background_image_aigen.jpg
     │   ├── docker-shell.sh
     │   ├── Dockerfile
+    │   ├── Dockerfile.dev
     │   ├── index.html
     │   ├── main.js
     │   ├── styles.css
+    │   └── README.md
     ├── image_train_preparation
     │   ├── Dockerfile
     │   ├── pipfile
@@ -81,30 +100,33 @@ Project Organization
     │   ├── tensorizing.py
     │   ├── entrypoint.sh
     │   ├── docker-shell.sh
-    ├── image-train-preparation-20k
+    │   └── README.md
+    ├── image_train_preparation-20k
     │   ├── Dockerfile
     │   ├── pipfile
     │   ├── Pipfile.lock
     │   ├── tensorizing.py
     │   ├── entrypoint.sh
     │   ├── docker-shell.sh
-    ├── model-deployment
+    │   └── README.md
+    ├── model_deployment
     │   ├── Dockerfile
     │   ├── pipfile
     │   ├── Pipfile.lock
     │   ├── model_deployment.py
     │   ├── entrypoint.sh
-    │   └── docker-shell.sh
-    ├── model-training
+    │   ├── docker-shell.sh
+    │   └── README.md
+    ├── model_training
     │   ├── Dockerfile
-    │   ├── pipfile
+    │   ├── Pipfile
     │   ├── Pipfile.lock
-    │   ├── model_training.py
-    │   ├── model_training_inceptionV3.py
-    │   ├── best_model.keras
+    │   ├── model_training_v3.py
     │   ├── entrypoint.sh
-    │   └── docker-shell.sh
+    │   ├── docker-shell.sh
+    │   └── README.md
     ├── pwd
+    ├── .pre-commit-config.yaml
     ├── tests
     │   ├── resources
     │   │   └── car_test_mini
@@ -128,8 +150,14 @@ Project Organization
     │   ├── conftest.py
     │   ├── run_single_test.sh
     │   ├── run_test.sh
+    │   ├── test_api_dict.py
+    │   ├── test_data_preprocess.py
     │   ├── test_data_preprocess_mini.py
     │   ├── test_image_train_preparation.py
+    │   ├── test_image_train_preparation_20k.py
+    │   ├── test_model_deploy.py
+    │   ├── test_model_training.py
+    │   └── README.md
     ├── workflow
     │   ├── Dockerfile
     │   ├── pipfile
@@ -137,7 +165,8 @@ Project Organization
     │   ├── entrypoint.sh
     │   ├── workflow.py
     │   ├── docker-shell.sh
-    │   └── pipeline.yaml
+    │   ├── pipeline.yaml
+    │   └── README.md
     ├── Dockerfile
     ├── Pipfile
     ├── Pipfile.lock
@@ -148,10 +177,10 @@ Project Organization
 
 The following are some sample uses of our app:
 
-![Image](placeholder)
-![Image](placeholder)
-![Image](placeholder)
-![Image](placeholder)
+![01001](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/01001.jpg)
+![01001_pred](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/01001_pred.png)
+![01007](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/01007.jpg)
+![01007_pred](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/01007_pred.png)
 
 #### Kubernetes Deployment
 
@@ -159,7 +188,7 @@ We deployed the frontend and API service containers to the Kubernetes cluster to
 
 The following is a screenshot of the Kubernetes cluster we are running in GCP:
 
-![Image](placeholder)
+![GKE](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/gke.jpg)
 
 #### Deployment Pipeline (`src/deployment/`)
 
@@ -211,7 +240,11 @@ If you want to run our ML pipeline, checkout the directions under `src/workflow/
 
 The following are screenshots of logs during deployment on Kubernetes.
 
-![image](placeholder)
+![k8s_1](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/k8s_1.jpg)
+![k8s_2](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/k8s_2.jpg)
+![k8s_3](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/k8s_3.jpg)
+![k8s_4](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/k8s_4.jpg)
+![k8s_5](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/k8s_5.jpg)
 
 #### API container (api_service)
 
@@ -230,7 +263,11 @@ in your local terminal, type the following commands:
 
 The following is an updated screenshot of our FastAPI `docs` interface.
 
-![image](placeholder)
+![image](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/api_new.png)
+
+The original one contains the result from the `/predict` endpoint at the bottom.
+
+![image](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/api.png)
 
 #### Frontend container (frontend)
 
@@ -257,13 +294,72 @@ After the container is running, type the following command:
 
 and paste "127.0.0.1:8080" in your browser to interact with the webpage.
 
-#### CI/CD Pipeline (`.github/workflows/`)
+#### CI/CD Pipeline (`.github/workflows/ci-cd.yml`)
 
-#### Test container and Documentation (tests)
+We added CI/CD using GitHub Actions, such that we can trigger deployment using GitHub Events. Our yaml file which instantiates the actions can be found in `.github/workflows/ci-cd.yml`.
 
--   This container runs a series of tests to verify data preprocessing, image processing, and data download functionalities, using PyTest to ensure that data is accurately uploaded, processed, and downloaded from cloud storage.
--   Input to this container are test scripts, resource images, and configuration files.
--   Output from this container are test outcomes and coverage reports.
+Our CI/CD pipeline is triggered on pushes to the `main` or `harper_test_2` branches if the commit message contains "/run-ci-cd". It builds and runs a Docker container for deployment, authenticates to Google Cloud, and uses a containerized app to deploy services for the frontend and API while ensuring GCP credentials are securely passed to the container.
+
+#### Test Container and Documentation (tests)
+
+- This container runs a series of tests to verify data preprocessing, tensorizing, model training, model deployment, and one API service's functionalities. PyTest is used to ensure accurate data upload, processing, tensorization from cloud storage, and to test model training and deployment functionalities as much as possible.
+- The coverage report indicates an 82% coverage rate.
+
+Detailed Report on Uncovered Parts
+
+- **`src/data_preprocess/data_loader.py`**  
+  Lines 51-61: Argparse arguments.
+
+- **`src/data_preprocess/preprocess.py`**  
+  Line 64: Requires >1000 images to cover, but a mini dataset was used for testing.  
+  Lines 72-73: Coverage requires handling all edge cases. Attempts to cover this using the function `test_process_images_exception_handling` in `src/tests/test_data_preprocess.py` did not trigger coverage.  
+  Lines 77-114: Argparse arguments.
+
+- **`src/data_preprocess_mini/data_loader.py`**  
+  Lines 51-61: Argparse arguments.
+
+- **`src/data_preprocess_mini/download.py`**  
+  Lines 26-35: Argparse arguments.
+
+- **`src/data_preprocess_mini/preprocess.py`**  
+  Line 69: Requires >1000 images to cover, but a mini dataset was used for testing.  
+  Lines 77-78: Coverage requires handling all edge cases. Attempts to cover this using the function `test_process_images_exception_handling` in `src/tests/test_data_preprocess_mini.py` did not trigger coverage.  
+  Lines 82-119: Argparse arguments.
+
+- **`src/image_train_preparation/tensorizing.py`**  
+  Lines 96-140: Argparse arguments.
+
+- **`src/image_train_preparation_20k/tensorizing.py`**  
+  Line 45: Requires >100 images to cover, but a mini dataset was used for testing.  
+  Lines 101-159: Argparse arguments.
+
+- **`src/model_training/model_training_v3.py`**  
+  Lines 87-113: Coverage requires outputs from other functions, which are difficult to simulate in the test environment.  
+  Lines 118-175: Argparse arguments.  
+  Lines 179-217: Argparse arguments.
+
+- **Test Scripts**  
+  Files such as `conftest.py`, `test_api_dict.py`, ... , `test_model_deploy.py`, and `test_model_training.py` themselves are not covered in the report.
+
+### Untested Scripts
+
+- **`src/api_service/dictionary.py`**  
+  Tested with `test_api_dict.py` but not included in the coverage report because the tested script is not functionalized and is not imported into the test script.
+
+- **`src/api_service/server.py`**  
+  Not required to test.
+
+- **`src/deployment/`**  
+  No `.py` files to test.
+
+- **`src/frontend/`**  
+  No `.py` files to test.
+
+- **`src/model_deployment/`**  
+  Tested with `test_model_deploy.py` but not included in the coverage report because the tested script is not functionalized and is not imported into the test script.
+
+- **`src/workflow/`**  
+  Not tested as the script's logic is simple (running all Docker images for model deployment on Vertex AI), and a similar procedure is repeated using Ansible in `src/deployment/`.
 
 Instructions to Run Tests Manually
 
@@ -282,42 +378,80 @@ The user could change the function that they would like to test in `run_single_t
 
 The following is a screenshot of our coverage report.
 
-![coverage report](https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/coverage.png)
+![coverage_new](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/coverage_new.png)
 
 The following is a screenshot of our linting test.
 
-![lint](https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/lint.png)
+![lint](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/lint.png)
 
 #### Code Structure
 
 The following are the folders in `/src/` and their modified changes since milestone 4:
 
--   api_service:
+-   api_service: added an endpoint to collect user-uploaded images and trigger the pipeline, which includes **data preprocessing, tensorization, and model training** to retrain the model
 -   data_preprocess
 -   data_preprocess_mini
--   deployment:
--   frontend:
+-   deployment: deployed the frontend and API service containers on Kubernetes using Ansible
+-   frontend: added another API endpoint for model training pipeline trigger
 -   image_train_preparation
 -   image_train_preparation_20k
 -   model_deployment
--   model_training
--   tests:
+-   model_training: containerized for users with GCP GPU resources for future training
+-   tests: more test scripts to cover 82% of the lines
 -   workflow
 
 #### Limitations and Notes
 
-NOTE:
-There are 2 different workflows under construction now. The milestone 4 deliverable is completed with a mini batch of our data to demonstrate our Vertex AI pipeline (data preprocessing, data tensorizing, model training, and model deployment), API service, frontend, CI/CD, and testing.
+**Limitations:**
 
-For our final workflow, we will perform data preprocessing, data tensorizing, and model deployment using model trained with Google Colab and saved on Weights and Biases. This is currently under develop with scripts in the folder `src/image-train-preparation-20k` that performs stratified sampling from the ~90,000 augmented car images, and trained with Google Colab notebook formated as `src/model-training/model_training_inceptionV3.py`.
+1. **Image Resizing Impact**  
+   Based on feedback from the last milestone, we visualized the original and resized images to determine if resizing images would alter the proportions of the car images used for training. Our analysis confirmed that resizing does, in fact, change the car's proportions, which may negatively affect model accuracy. Future work could explore training with different image sizes or maintaining the original dimensions to evaluate whether this approach improves model performance.
 
+   ![resize_224](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/resize_224.png)
+
+2. **Class Imbalance**  
+   Due to time constraints, we were unable to retrain our model using stratified sampled images. As a result, the model's performance may decline when predicting car images from underrepresented classes. Future work could involve web-scraping additional car images to address the class imbalance and enhance overall model performance.
+
+3. **Incorrect Labels**  
+   The original dataset contains some incorrect labels, which may negatively impact the model's predictive accuracy. Future work could involve manual labeling to correct these inaccuracies and further improve model performance.
+
+4. **Evaluation Metrics**  
+   We acknowledge that performance evaluation should go beyond accuracy. Future work should incorporate additional performance metrics such as precision, recall, and F1 score to provide a more comprehensive assessment of model performance.
+
+5. **Cloud Run Job Timeout**  
+   Although we successfully containerized the model training step and submitted it to a Cloud Run job, the job did not complete successfully due to a timeout issue. Future efforts could involve leveraging GCP GPU resources to train new models using Cloud Run jobs, thereby reducing the risk of timeouts and increasing computational efficiency.
+
+---
+
+**Notes:**
+
+For Milestone 4, we constructed two distinct workflows: one for testing and another for model training on Weights & Biases (W&B). We chose to keep both workflows to enable future work on mini-batch data testing. The following outlines the folder structure for different workflows and their shared components:
+
+- **Mini-batch Data Workflow Folders:**  
+  - `data_preprocess_mini`  
+  - `image_train_preparation`  
+  - `model_training`  
+
+- **Shared Folders (for both mini-batch and full model workflows):**  
+  - `model_deployment`  
+  - `workflow`  
+  - `tests`  
+  - `api_service`  
+  - `frontend`  
+  - `deployment`  
+
+- **Full Batch Data Workflow Folders:**  
+  - `data_preprocess`  
+  - `image_train_preparation_20k`  
+
+Each folder includes a `README.md` file containing detailed instructions on file structures, function descriptions, and replication guides to facilitate seamless navigation and usage for future development.
 
 #### Notebook
 
 As we can see from the following 2 plots from our EDA notebook:
 
-![eda_manu](https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/eda_manu.png)
-![eda_manu](https://github.com/xinyi-wang02/ac2152024_group_X/blob/milestone4/images/eda_year.png)
+![eda_manu](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/eda_manu.png)
+![eda_manu](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/eda_year.png)
 
 There is a noticeable class imbalance in the dataset, with an overrepresentation of Chevrolet cars and cars produced in 2012. To address this, we used stratified sampling before model training to ensure that the training set maintains the same class proportions as the original dataset, which is crucial for handling uneven class distributions. Stratified sampling also prevents the extreme scenario where all sampled images belong to a single class, leading to a model that can only make a limited range of predictions.
 
@@ -339,6 +473,7 @@ Additionally, we implemented early stopping in all models to monitor validation 
                   ├── all_images/
                   ├── class_label.csv
                   ├── class_label_dictionary.csv
+      ├── 215_deployment/
       ├── car_class_test_bucket/
             ├── test_images/
       ├── mini-215-multiclass-car-bucket/
@@ -361,6 +496,26 @@ Additionally, we implemented early stopping in all models to monitor validation 
             ├── variables/
                   ├── variables.data-00000-of-00001
                   ├── variables.index
+      ├── model_wnb/
+            ├── carnet_v1_50epoch/
+                  ├── fingerprint.pb
+                  ├── saved_model.pb
+                  ├── variables/
+                        ├── variables.data-00000-of-00001
+                        ├── variables.index
+            ├── carnet_v3_4epoch_tf213/
+                  ├── fingerprint.pb
+                  ├── saved_model.pb
+                  ├── variables/
+                        ├── variables.data-00000-of-00001
+                        ├── variables.index
+            ├── carnet_v3_50epoch_tf213/
+                  ├── fingerprint.pb
+                  ├── saved_model.pb
+                  ├── variables/
+                        ├── variables.data-00000-of-00001
+                        ├── variables.index test_bucket_new
+      ├── test_bucket_new
       └── tensor-bucket-20k/
             ├── data.tfrecord
 
