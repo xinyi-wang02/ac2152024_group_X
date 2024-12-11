@@ -178,7 +178,7 @@ The following is a screenshot of the Kubernetes cluster we are running in GCP:
 #### Set up instructions
 
 Prerequisites
-- Docker, gcloud CLI 
+- Docker, gcloud CLI
 - Get GCP Service Account Key file, and set environment variables (GCP Project ID, region, and zone)
 - Create folder `~/src/deployment/secrets/`
 - Copy secrets json file to `~/src/deployment/secrets/`
@@ -215,7 +215,7 @@ The following are screenshots of logs during deployment on Kubernetes.
 
 #### API container (api_service)
 
-- Most of the container's content remains unchanged from the previous milestone. However, we added an endpoint to collect user-uploaded images and trigger the pipeline, which includes **data preprocessing, tensorization, and model training** to retrain the model. 
+- Most of the container's content remains unchanged from the previous milestone. However, we added an endpoint to collect user-uploaded images and trigger the pipeline, which includes **data preprocessing, tensorization, and model training** to retrain the model.
 - Instead of deploying the retrained model immediately, we implemented a validation check to ensure that only models with good performance are deployed, preventing interference with the existing `/predict` endpoint.
 - We also integrated the API service with an automated deployment powered by **Ansible playbook** and a **Kubernetes cluster**.
 
@@ -238,7 +238,7 @@ The following is an updated screenshot of our FastAPI `docs` interface.
 
 In order to run the app on local, we first follow the steps below to set up and run the API container:
 -  create folder `~/src/api-service/no_ship/`
--  copy secret json file  
+-  copy secret json file
 
 in your local terminal, type the following commands:
 -   cd ~/src/api-service/
@@ -298,10 +298,10 @@ The following are the folders in `/src/` and their modified changes since milest
 -   deployment:
 -   frontend:
 -   image_train_preparation
--   image_train_preparation_20k 
+-   image_train_preparation_20k
 -   model_deployment
 -   model_training
--   tests: 
+-   tests:
 -   workflow
 
 #### Limitations and Notes
