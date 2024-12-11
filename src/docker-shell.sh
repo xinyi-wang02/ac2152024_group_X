@@ -14,7 +14,7 @@ docker build -t $IMAGE_NAME -f Dockerfile .
 # Run the container
 docker run --rm \
 --name $IMAGE_NAME \
--e GOOGLE_APPLICATION_CREDENTIALS='/no_ship/data-service-account.json' \
+-e GOOGLE_APPLICATION_CREDENTIALS='/no_ship/ai-service-account-harper.json' \
 -v $LOCAL_MOUNT_DIR:/no_ship \
 -v ./:/app/dev \
 -ti $IMAGE_NAME
