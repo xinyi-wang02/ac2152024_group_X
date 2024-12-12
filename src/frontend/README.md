@@ -1,23 +1,8 @@
 #### Frontend container (frontend)
 
-- Most of the container's content remains unchanged from the previous milestone. Note that this folder contains docker files for both development and production. We integrated the frontend with an automated deployment powered by **Ansible playbook** and a **Kubernetes cluster**.
+- We have added a hint to our frontend. We noticed this error: google.api_core.exceptions.FailedPrecondition: 400 The request size (4027510 bytes) exceeds 1.500MB limit. So if the user uploads an image exceeding 1.5 MB, our frontend will hint the user to change to a smaller image. Note that this folder contains docker files for both development and production. We integrated the frontend with an automated deployment powered by **Ansible playbook** and a **Kubernetes cluster**.
 
-##### Application components
-
-Header: A static header displaying the name of the application.
-
-Interactive window: This section features a white box designed for user interaction. Click the "Choose File" button to upload a car image, and then select "Upload and Identify" to receive the result shortly after.
-
-##### Setup instructions
-
-In order to run the app on local, we first follow the steps below to set up and run the API container:
--  create folder `~/src/api-service/no_ship/`
--  copy secret json file
-
-in your local terminal, type the following commands:
--   cd ~/src/api-service/
--   chmod +x docker-shell.sh
--   ./docker-shell.sh
+In order to run the app on local, we first need to set up and run the API container.
 
 Before running the container for frontend, modify `docker-shell.sh` to change the docker image to `Dockerfile.dev`
 
@@ -26,11 +11,6 @@ Then, we continue in the frontend container, type the following commands:
 -   chmod +x docker-shell.sh
 -   ./docker-shell.sh
 
-After the container is running, type the following command:
--   http-server
-
 and paste "127.0.0.1:8080" in your browser to interact with the webpage.
 
-##### Usage guidelines
-
-After setting up the application as described above, you can upload car images and receive predictions from our model. Please ensure that the images are static, file size is less than 1.5 MB, and in formats such as `.jpg`, `.jpeg`, `.png`, `.webp`, etc.
+#### CI/CD Pipeline (`.github/workflows/ci-cd.yml`)

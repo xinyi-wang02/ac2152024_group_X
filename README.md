@@ -15,7 +15,7 @@ In this milestone, we completed the following tasks:
 - Change the frontend to include user hints and added docker-entrypoint.sh
 - Unit tests across all containers & CI/CD through Github Actions
 - Containerized `model_training` for future users to train with GCP GPU resource
-- Shoot a [video](https://youtu.be/pk9pNsbs8Lk) and wrote a [Medium Post](Placeholder) to document our project
+- Shoot a [video](https://youtu.be/pk9pNsbs8Lk) and wrote a [Medium Post](https://medium.com/@harperwxy0722/carid-a-ml-based-application-for-accurate-car-model-make-and-year-recognition-from-user-uploaded-0ad52a449341) to document our project
 
 Project Organization
 
@@ -182,6 +182,7 @@ The following are some sample uses of our app:
 ![01001_pred](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/01001_pred.png)
 ![01007](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/01007.jpg)
 ![01007_pred](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/01007_pred.png)
+![large_image](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/large_image.jpg)
 
 #### Kubernetes Deployment
 
@@ -204,6 +205,7 @@ The following is a screenshot of the Kubernetes cluster we are running in GCP:
 (5)`src/deployment/docker-shell.sh` and `src/deployment/docker-entrypoint.sh` - These scripts build and run the Docker container with the context of the Ansible environment. It also specifies credentials for GCP authentication and container entry point.
 
 (6)`src/deployment/nginx-config/nginx/nginx.config` - This file defines the NGINX configuration for routing traffic to the frontend and API services within the Kubernetes cluster. It sets up proxy rules to forward requests to the API service on port 9000 and to the frontend at its root path. 
+
 #### Set up instructions
 
 Prerequisites
@@ -240,7 +242,7 @@ The following are screenshots of logs during deployment on Kubernetes.
 
 #### API container (api_service)
 
-- We have major change from the previous milestone. For our /predict endpoint, it now not only predicts the label for a user uploaded image, but it also uploads the image to our raw data bucket accroding to the predicted label. We also have a new endpoint called /trigger_pipeline. This endpoint deploy our backend ML pipeline on Vertex AI once we have enough new data points (1000 for now). This pipeline is a bit different from our initial vertex AI pipeline: after preprocessing, preparatin, training and validation check, the model is not deployed to a new endpoint. Instead, the new version is pushed the model registry, so we still have the same model serving endpoint.
+- We have major change from the previous milestone. For our `/predict` endpoint, it now not only predicts the label for a user uploaded image, but it also uploads the image to our raw data bucket according to the predicted label. We also have a new endpoint called `/trigger_pipeline`. This endpoint deploys our backend ML pipeline on Vertex AI once we have enough new data points (1000 for now). This pipeline is a bit different from our initial vertex AI pipeline: after preprocessing, preparation, training and validation check, the model is not deployed to a new endpoint. Instead, the new version is pushed to the model registry, so we still have the same model serving endpoint.
 - We also integrated the API service with an automated deployment powered by **Ansible playbook** and a **Kubernetes cluster**.
 
 To run Dockerfile - follow the steps below:
@@ -252,6 +254,7 @@ in your local terminal, type the following commands:
 - chmod +x docker-shell.sh
 - ./docker-shell.sh
 - when testing locally, go to localhost/9000/docs on your browswer to look at the graphic UI
+
 The following is an updated screenshot of our FastAPI `docs` interface.
 
 ![image](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/api_new.png)
@@ -262,7 +265,7 @@ The original one contains the result from the `/predict` endpoint at the bottom.
 
 #### Frontend container (frontend)
 
-- We have added a hint to our frontend. We noticed this error: google.api_core.exceptions.FailedPrecondition: 400 The request size (4027510 bytes) exceeds 1.500MB limit. So if the user uploads an image exceeding 1.5 MB, our fronted will hint the user to change to a smaller image. Note that this folder contains docker files for both development and production. We integrated the frontend with an automated deployment powered by **Ansible playbook** and a **Kubernetes cluster**.
+- We have added a hint to our frontend. We noticed this error: google.api_core.exceptions.FailedPrecondition: 400 The request size (4027510 bytes) exceeds 1.500MB limit. So if the user uploads an image exceeding 1.5 MB, our frontend will hint the user to change to a smaller image. Note that this folder contains docker files for both development and production. We integrated the frontend with an automated deployment powered by **Ansible playbook** and a **Kubernetes cluster**.
 
 In order to run the app on local, we first need to set up and run the API container.
 
