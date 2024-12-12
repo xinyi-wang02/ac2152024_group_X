@@ -204,7 +204,7 @@ The following is a screenshot of the Kubernetes cluster we are running in GCP:
 
 (5)`src/deployment/docker-shell.sh` and `src/deployment/docker-entrypoint.sh` - These scripts build and run the Docker container with the context of the Ansible environment. It also specifies credentials for GCP authentication and container entry point.
 
-(6)`src/deployment/nginx-config/nginx/nginx.config` - This file defines the NGINX configuration for routing traffic to the frontend and API services within the Kubernetes cluster. It sets up proxy rules to forward requests to the API service on port 9000 and to the frontend at its root path. 
+(6)`src/deployment/nginx-config/nginx/nginx.config` - This file defines the NGINX configuration for routing traffic to the frontend and API services within the Kubernetes cluster. It sets up proxy rules to forward requests to the API service on port 9000 and to the frontend at its root path.
 
 #### Set up instructions
 
@@ -286,7 +286,7 @@ Our CI/CD pipeline is triggered on pushes to the `main` or `harper_test_2` branc
 
 #### CI/CD Pipeline (`.github/workflows/unit_tests.yml`)
 
-Our unit_test now has a coverage of 82% and it was 58% before. We added many more test functions to ensure our pipeline can run smoothly everytime we would like to retrain and push a new version of model to model registry. We also functionized our training script in the model-training container and our tests covered everything except the signature of the model. 
+Our unit_test now has a coverage of 82% and it was 58% before. We added many more test functions to ensure our pipeline can run smoothly everytime we would like to retrain and push a new version of model to model registry. We also functionized our training script in the model-training container and our tests covered everything except the signature of the model.
 
 #### CI/CD Pipeline (`.github/workflows/lint.yml`)
 
@@ -299,58 +299,58 @@ We did not change the lint file. We used ruff as our linting tool. Everytime bef
 
 Detailed Report on Uncovered Parts
 
-- **`src/data_preprocess/data_loader.py`**  
+- **`src/data_preprocess/data_loader.py`**
   Lines 51-61: Argparse arguments.
 
-- **`src/data_preprocess/preprocess.py`**  
-  Line 64: Requires >1000 images to cover, but a mini dataset was used for testing.  
-  Lines 72-73: Coverage requires handling all edge cases. Attempts to cover this using the function `test_process_images_exception_handling` in `src/tests/test_data_preprocess.py` did not trigger coverage.  
+- **`src/data_preprocess/preprocess.py`**
+  Line 64: Requires >1000 images to cover, but a mini dataset was used for testing.
+  Lines 72-73: Coverage requires handling all edge cases. Attempts to cover this using the function `test_process_images_exception_handling` in `src/tests/test_data_preprocess.py` did not trigger coverage.
   Lines 77-114: Argparse arguments.
 
-- **`src/data_preprocess_mini/data_loader.py`**  
+- **`src/data_preprocess_mini/data_loader.py`**
   Lines 51-61: Argparse arguments.
 
-- **`src/data_preprocess_mini/download.py`**  
+- **`src/data_preprocess_mini/download.py`**
   Lines 26-35: Argparse arguments.
 
-- **`src/data_preprocess_mini/preprocess.py`**  
-  Line 69: Requires >1000 images to cover, but a mini dataset was used for testing.  
-  Lines 77-78: Coverage requires handling all edge cases. Attempts to cover this using the function `test_process_images_exception_handling` in `src/tests/test_data_preprocess_mini.py` did not trigger coverage.  
+- **`src/data_preprocess_mini/preprocess.py`**
+  Line 69: Requires >1000 images to cover, but a mini dataset was used for testing.
+  Lines 77-78: Coverage requires handling all edge cases. Attempts to cover this using the function `test_process_images_exception_handling` in `src/tests/test_data_preprocess_mini.py` did not trigger coverage.
   Lines 82-119: Argparse arguments.
 
-- **`src/image_train_preparation/tensorizing.py`**  
+- **`src/image_train_preparation/tensorizing.py`**
   Lines 96-140: Argparse arguments.
 
-- **`src/image_train_preparation_20k/tensorizing.py`**  
-  Line 45: Requires >100 images to cover, but a mini dataset was used for testing.  
+- **`src/image_train_preparation_20k/tensorizing.py`**
+  Line 45: Requires >100 images to cover, but a mini dataset was used for testing.
   Lines 101-159: Argparse arguments.
 
-- **`src/model_training/model_training_v3.py`**  
-  Lines 87-113: Coverage requires outputs from other functions, which are difficult to simulate in the test environment.  
-  Lines 118-175: Argparse arguments.  
+- **`src/model_training/model_training_v3.py`**
+  Lines 87-113: Coverage requires outputs from other functions, which are difficult to simulate in the test environment.
+  Lines 118-175: Argparse arguments.
   Lines 179-217: Argparse arguments.
 
-- **Test Scripts**  
+- **Test Scripts**
   Files such as `conftest.py`, `test_api_dict.py`, ... , `test_model_deploy.py`, and `test_model_training.py` themselves are not covered in the report.
 
 ### Untested Scripts
 
-- **`src/api_service/dictionary.py`**  
+- **`src/api_service/dictionary.py`**
   Tested with `test_api_dict.py` but not included in the coverage report because the tested script is not functionalized and is not imported into the test script.
 
-- **`src/api_service/server.py`**  
+- **`src/api_service/server.py`**
   Not required to test.
 
-- **`src/deployment/`**  
+- **`src/deployment/`**
   No `.py` files to test.
 
-- **`src/frontend/`**  
+- **`src/frontend/`**
   No `.py` files to test.
 
-- **`src/model_deployment/`**  
+- **`src/model_deployment/`**
   Tested with `test_model_deploy.py` but not included in the coverage report because the tested script is not functionalized and is not imported into the test script.
 
-- **`src/workflow/`**  
+- **`src/workflow/`**
   Not tested as the script's logic is simple (running all Docker images for model deployment on Vertex AI), and a similar procedure is repeated using Ansible in `src/deployment/`.
 
 Instructions to Run Tests Manually
@@ -396,18 +396,18 @@ The following are the folders in `/src/` and their modified changes since milest
 
 **Limitations:**
 
-1. **Image Resizing Impact**  
+1. **Image Resizing Impact**
    Based on feedback from the last milestone, we visualized the original and resized images to determine if resizing images would alter the proportions of the car images used for training. Our analysis confirmed that resizing does, in fact, change the car's proportions, which may negatively affect model accuracy. Future work could explore training with different image sizes or maintaining the original dimensions to evaluate whether this approach improves model performance.
 
    ![resize_224](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/resize_224.png)
 
-2. **Class Imbalance**  
+2. **Class Imbalance**
    Due to time constraints, we were unable to retrain our model using stratified sampled images. As a result, the model's performance may decline when predicting car images from underrepresented classes. Future work could involve web-scraping additional car images to address the class imbalance and enhance overall model performance.
 
-3. **Incorrect Labels**  
+3. **Incorrect Labels**
    The original dataset contains some incorrect labels, which may negatively impact the model's predictive accuracy. Future work could involve manual labeling to correct these inaccuracies and further improve model performance.
 
-4. **Evaluation Metrics**  
+4. **Evaluation Metrics**
    We acknowledge that performance evaluation should go beyond accuracy. Future work should incorporate additional performance metrics such as precision, recall, and F1 score to provide a more comprehensive assessment of model performance.
 
 
@@ -417,22 +417,22 @@ The following are the folders in `/src/` and their modified changes since milest
 
 For Milestone 4, we constructed two distinct workflows: one for testing and another for model training on Weights & Biases (W&B). We chose to keep both workflows to enable future work on mini-batch data testing. The following outlines the folder structure for different workflows and their shared components:
 
-- **Mini-batch Data Workflow Folders:**  
-  - `data_preprocess_mini`  
-  - `image_train_preparation`  
-  - `model_training`  
+- **Mini-batch Data Workflow Folders:**
+  - `data_preprocess_mini`
+  - `image_train_preparation`
+  - `model_training`
 
-- **Shared Folders (for both mini-batch and full model workflows):**  
-  - `model_deployment`  
-  - `workflow`  
-  - `tests`  
-  - `api_service`  
-  - `frontend`  
-  - `deployment`  
+- **Shared Folders (for both mini-batch and full model workflows):**
+  - `model_deployment`
+  - `workflow`
+  - `tests`
+  - `api_service`
+  - `frontend`
+  - `deployment`
 
-- **Full Batch Data Workflow Folders:**  
-  - `data_preprocess`  
-  - `image_train_preparation_20k`  
+- **Full Batch Data Workflow Folders:**
+  - `data_preprocess`
+  - `image_train_preparation_20k`
 
 Each folder includes a `README.md` file containing detailed instructions on file structures, function descriptions, and replication guides to facilitate seamless navigation and usage for future development.
 
