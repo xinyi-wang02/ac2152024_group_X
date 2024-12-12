@@ -184,7 +184,7 @@ The following are some sample uses of our app:
 
 #### Kubernetes Deployment
 
-We deployed the frontend and API service containers to the Kubernetes cluster to address key distributed systems challenges, such as load balancing. The pipeline includes a Dockerfile and Ansible playbooks that build and push container images for the frontend and API services to Google Container Registry (GCR). It also provisions a Kubernetes cluster on Google Kubernetes Engine (GKE) using Ansible, with support for GKE cluster autoscaling through node pool scaling. The entire pipeline is orchestrated with shell scripts that manage GCP authentication, configure secrets, and implement infrastructure as code (IaC) to fully automate the deployment process.
+We deployed the frontend and API service containers to the Kubernetes cluster to address key distributed systems challenges, such as load balancing. The pipeline includes a Dockerfile and Ansible playbooks that build and push container images for the frontend and API services to Artifact Registry. It also deploys a Kubernetes cluster on Google Kubernetes Engine (GKE) using Ansible, with support for GKE cluster autoscaling through node pool scaling. The entire pipeline is orchestrated with shell scripts that manage GCP authentication, and configure secrets to fully automate the deployment process.
 
 The following is a screenshot of the Kubernetes cluster we are running in GCP:
 
@@ -192,18 +192,17 @@ The following is a screenshot of the Kubernetes cluster we are running in GCP:
 
 #### Deployment Pipeline (`src/deployment/`)
 
-(1)`src/deployment/deploy-docker-images.yml` - This yaml file builds Docker images for frontend and API services and pushes them to GCR.
+(1)`src/deployment/deploy-docker-images.yml` - This yaml file builds Docker images for frontend and API services and pushes them to Artifact Registry.
 
-(2)`src/deployment/deploy-k8s-cluster.yml` - This yaml file creates and manages a Kubernetes cluster on GCP using Ansible and GCP Cloud modules. It deploys frontend and API services along with Nginx Ingress, Persistent Volumes, and Secrets. It defines and applies Kubernetes manifests (Deployments, Services, Ingress) using Ansible's k8s module while also configuring Secrets and ConfigMaps for the pods.
+(2)`src/deployment/deploy-k8s-cluster.yml` - This yaml file creates and manages a Kubernetes cluster on GKE using Ansible Playbook. It deploys frontend and API services along with Nginx Ingress. It defines and applies Kubernetes manifests (Deployments, Services, Ingress) using Ansible's k8s module while also configuring Secrets and ConfigMaps for the pods.
 
 (3)`src/deployment/inventory.yml` - This yaml file defines hosts and variables for Ansible playbooks. It sets up GCP credentials and SSH information to allow Ansible to manage remote systems.
 
-(4)`src/deployment/Dockerfile` - This file defines the steps for building the containerized environment.
+(4)`src/deployment/Dockerfile` - This file defines the steps for building the containerized environment for deployment on k8s.
 
 (5)`src/deployment/docker-shell.sh` and `src/deployment/docker-entrypoint.sh` - These scripts build and run the Docker container with the context of the Ansible environment. It also specifies credentials for GCP authentication and container entry point.
 
-(6)`src/deployment/nginx-config/nginx/nginx.config` - This file defines the NGINX configuration for routing traffic to the frontend and API services within the Kubernetes cluster. It sets up proxy rules to forward requests to the API service on port 9000 and to the frontend at its root path. The configuration also includes server directives for access logging, gzip compression, SSL protocols, and connection settings to support load balancing, request forwarding, and optimized performance.
-
+(6)`src/deployment/nginx-config/nginx/nginx.config` - This file defines the NGINX configuration for routing traffic to the frontend and API services within the Kubernetes cluster. It sets up proxy rules to forward requests to the API service on port 9000 and to the frontend at its root path. 
 #### Set up instructions
 
 Prerequisites
@@ -219,24 +218,16 @@ In your local terminal, type the following commands:
 - ./docker-shell.sh
 
 Once the container is running, ensure it has access to GCP services by typing the following commands in gcloud CLI:
-- gcloud auth activate-service-account --key-file /secrets/deployment.json
-- gcloud config set project $GCP_PROJECT
 - gcloud auth configure-docker us-central1-docker.pkg.dev
 
 Build and Push Docker Containers to GCR (Google Container Registry) by typing the following command:
 - ansible-playbook deploy-docker-images.yml -i inventory.yml
 
-After inside the container, type the following command to deploy the Kubernetes Cluster:
+After pushing the images, type the following command to deploy the Kubernetes Cluster:
 - ansible-playbook src/deployment/deploy-k8s-cluster.yml -i src/deployment/inventory.yml --extra-vars cluster_state=present
 
 Note the nginx_ingress_ip that was outputted by the cluster command
 - Visit http:// YOUR INGRESS IP.sslip.io to view the website
-
-If you want to run our ML pipeline, checkout the directions under `src/workflow/`. The following are the commands to run the pipelines:
-
-- cd ~/src/workflow/
-- chmod +x docker-shell.sh
-- ./docker-shell.sh
 
 The following are screenshots of logs during deployment on Kubernetes.
 
@@ -248,8 +239,7 @@ The following are screenshots of logs during deployment on Kubernetes.
 
 #### API container (api_service)
 
-- Most of the container's content remains unchanged from the previous milestone. However, we added an endpoint to collect user-uploaded images and trigger the pipeline, which includes **data preprocessing, tensorization, and model training** to retrain the model.
-- Instead of deploying the retrained model immediately, we implemented a validation check to ensure that only models with good performance are deployed, preventing interference with the existing `/predict` endpoint.
+- We have major change from the previous milestone. For our /predict endpoint, it now not only predicts the label for a user uploaded image, but it also uploads the image to our raw data bucket accroding to the predicted label. We also have a new endpoint called /trigger_pipeline. This endpoint deploy our backend ML pipeline on Vertex AI once we have enough new data points (1000 for now). This pipeline is a bit different from our initial vertex AI pipeline: after preprocessing, preparatin, training and validation check, the model is not deployed to a new endpoint. Instead, the new version is pushed the model registry, so we still have the same model serving endpoint.
 - We also integrated the API service with an automated deployment powered by **Ansible playbook** and a **Kubernetes cluster**.
 
 To run Dockerfile - follow the steps below:
@@ -260,7 +250,7 @@ in your local terminal, type the following commands:
 - cd ~/src/api-service/
 - chmod +x docker-shell.sh
 - ./docker-shell.sh
-
+- when testing locally, go to localhost/9000/docs on your browswer to look at the graphic UI
 The following is an updated screenshot of our FastAPI `docs` interface.
 
 ![image](https://github.com/xinyi-wang02/ac2152024_group_X/blob/main/images/api_new.png)
@@ -271,16 +261,9 @@ The original one contains the result from the `/predict` endpoint at the bottom.
 
 #### Frontend container (frontend)
 
-- Most of the container's content remains unchanged from the previous milestone. Note that this folder contains docker files for both development and production. We integrated the frontend with an automated deployment powered by **Ansible playbook** and a **Kubernetes cluster**.
+- We have added a hint to our frontend. We noticed this error: google.api_core.exceptions.FailedPrecondition: 400 The request size (4027510 bytes) exceeds 1.500MB limit. So if the user uploads an image exceeding 1.5 MB, our fronted will hint the user to change to a smaller image. Note that this folder contains docker files for both development and production. We integrated the frontend with an automated deployment powered by **Ansible playbook** and a **Kubernetes cluster**.
 
-In order to run the app on local, we first follow the steps below to set up and run the API container:
--  create folder `~/src/api-service/no_ship/`
--  copy secret json file
-
-in your local terminal, type the following commands:
--   cd ~/src/api-service/
--   chmod +x docker-shell.sh
--   ./docker-shell.sh
+In order to run the app on local, we first need to set up and run the API container.
 
 Before running the container for frontend, modify `docker-shell.sh` to change the docker image to `Dockerfile.dev`
 
@@ -289,16 +272,21 @@ Then, we continue in the frontend container, type the following commands:
 -   chmod +x docker-shell.sh
 -   ./docker-shell.sh
 
-After the container is running, type the following command:
--   http-server
-
 and paste "127.0.0.1:8080" in your browser to interact with the webpage.
 
 #### CI/CD Pipeline (`.github/workflows/ci-cd.yml`)
 
 We added CI/CD using GitHub Actions, such that we can trigger deployment using GitHub Events. Our yaml file which instantiates the actions can be found in `.github/workflows/ci-cd.yml`.
 
-Our CI/CD pipeline is triggered on pushes to the `main` or `harper_test_2` branches if the commit message contains "/run-ci-cd". It builds and runs a Docker container for deployment, authenticates to Google Cloud, and uses a containerized app to deploy services for the frontend and API while ensuring GCP credentials are securely passed to the container.
+Our CI/CD pipeline is triggered on pushes to the `main` or `harper_test_2` branches if the commit message contains "/run-ci-cd". It builds and runs a Docker container for deployment, authenticates to Google Cloud, and uses a containerized app to deploy services for the pipeline while ensuring GCP credentials are securely passed to the container.
+
+#### CI/CD Pipeline (`.github/workflows/unit_tests.yml`)
+
+Our unit_test now has a coverage of 82% and it was 58% before. We added many more test functions to ensure our pipeline can run smoothly everytime we would like to retrain and push a new version of model to model registry. We also functionized our training script in the model-training container and our tests covered everything except the signature of the model. 
+
+#### CI/CD Pipeline (`.github/workflows/lint.yml`)
+
+We did not change the lint file. We used ruff as our linting tool. Everytime before we want to commit, we run the command pre-commit run --all-files.
 
 #### Test Container and Documentation (tests)
 
@@ -418,8 +406,6 @@ The following are the folders in `/src/` and their modified changes since milest
 4. **Evaluation Metrics**  
    We acknowledge that performance evaluation should go beyond accuracy. Future work should incorporate additional performance metrics such as precision, recall, and F1 score to provide a more comprehensive assessment of model performance.
 
-5. **Cloud Run Job Timeout**  
-   Although we successfully containerized the model training step and submitted it to a Cloud Run job, the job did not complete successfully due to a timeout issue. Future efforts could involve leveraging GCP GPU resources to train new models using Cloud Run jobs, thereby reducing the risk of timeouts and increasing computational efficiency.
 
 ---
 
