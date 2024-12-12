@@ -10,8 +10,9 @@
 
 In this milestone, we completed the following tasks:
 
-- Deploying the frontend and API service containers on Kubernetes using Ansible
-- Add another API endpoint for model training pipeline trigger
+- Deploying the frontend and API service containers on Google Kubernetes Engine using Ansible Playbook
+- Change the predict API endpoint and Add another API endpoint for model training pipeline trigger
+- Change the frontend to include user hints and added docker-entrypoint.sh
 - Unit tests across all containers & CI/CD through Github Actions
 - Containerized `model_training` for future users to train with GCP GPU resource
 - Shoot a [video](https://youtu.be/pk9pNsbs8Lk) and wrote a [Medium Post](Placeholder) to document our project
