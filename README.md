@@ -17,6 +17,8 @@ In this milestone, we completed the following tasks:
 - Containerized `model_training` for future users to train with GCP GPU resource
 - Shoot a [video](https://youtu.be/pk9pNsbs8Lk) and wrote a [Medium Post](https://medium.com/@harperwxy0722/carid-a-ml-based-application-for-accurate-car-model-make-and-year-recognition-from-user-uploaded-0ad52a449341) to document our project
 
+**ATTENTION**: The Run Unit Test on the `main` branch was not successful because we merged the test branch to the `main` branch after closing and all GCP services. For successful Unit test reports, please go to `milestone5` or `harper_test_2`.
+
 Project Organization
 
 ``` bash
@@ -434,7 +436,7 @@ For Milestone 4, we constructed two distinct workflows: one for testing and anot
   - `data_preprocess`
   - `image_train_preparation_20k`
 
-Each folder includes a `README.md` file containing detailed instructions on file structures, function descriptions, and replication guides to facilitate seamless navigation and usage for future development.
+Each folder includes a `README.md` file containing detailed instructions on file structures, function descriptions, and replication guides to facilitate seamless navigation and usage for future development.  
 
 #### Notebook
 
