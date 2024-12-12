@@ -436,7 +436,7 @@ For Milestone 4, we constructed two distinct workflows: one for testing and anot
   - `data_preprocess`
   - `image_train_preparation_20k`
 
-Each folder includes a `README.md` file containing detailed instructions on file structures, function descriptions, and replication guides to facilitate seamless navigation and usage for future development.  
+Each folder includes a `README.md` file containing detailed instructions on file structures, function descriptions, and replication guides to facilitate seamless navigation and usage for future development.
 
 #### Notebook
 
