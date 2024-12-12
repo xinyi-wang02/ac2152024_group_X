@@ -1,0 +1,66 @@
+# PIPELINE DEFINITION
+# Name: ml-pipeline
+components:
+  comp-age-model-training-component:
+    executorLabel: exec-age-model-training-component
+  comp-data-preprocessing-component:
+    executorLabel: exec-data-preprocessing-component
+  comp-model-deployment-component:
+    executorLabel: exec-model-deployment-component
+  comp-tensorizing-component:
+    executorLabel: exec-tensorizing-component
+deploymentSpec:
+  executors:
+    exec-age-model-training-component:
+      container:
+        image: us-central1-docker.pkg.dev/multiclass-car-project-demo/ml-pipeline/model_training
+    exec-data-preprocessing-component:
+      container:
+        image: us-central1-docker.pkg.dev/multiclass-car-project-demo/ml-pipeline/data-preprocessing
+    exec-model-deployment-component:
+      container:
+        image: us-central1-docker.pkg.dev/multiclass-car-project-demo/ml-pipeline/model_deployment
+    exec-tensorizing-component:
+      container:
+        image: us-central1-docker.pkg.dev/multiclass-car-project-demo/ml-pipeline/image_train_preparation
+pipelineInfo:
+  name: ml-pipeline
+root:
+  dag:
+    tasks:
+      age-model-training-component:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-age-model-training-component
+        dependentTasks:
+        - tensorizing-component
+        taskInfo:
+          name: Model Training
+      data-preprocessing-component:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-data-preprocessing-component
+        taskInfo:
+          name: Data Preprocessing
+      model-deployment-component:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-model-deployment-component
+        dependentTasks:
+        - age-model-training-component
+        taskInfo:
+          name: Model Deployment
+      tensorizing-component:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-tensorizing-component
+        dependentTasks:
+        - data-preprocessing-component
+        taskInfo:
+          name: ImageTensor Preparation
+schemaVersion: 2.1.0
+sdkVersion: kfp-2.9.0

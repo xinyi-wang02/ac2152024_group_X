@@ -1,0 +1,5 @@
+no_ship
+no_ship/*
+.DS_Store
+*/.DS_Store
+.env
