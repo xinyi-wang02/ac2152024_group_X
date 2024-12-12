@@ -221,7 +221,7 @@ In your local terminal, type the following commands:
 Once the container is running, ensure it has access to GCP services by typing the following commands in gcloud CLI:
 - gcloud auth configure-docker us-central1-docker.pkg.dev
 
-Build and Push Docker Containers to GCR (Google Container Registry) by typing the following command:
+Build and Push Docker Containers to Artifact Registry by typing the following command:
 - ansible-playbook deploy-docker-images.yml -i inventory.yml
 
 After pushing the images, type the following command to deploy the Kubernetes Cluster:
